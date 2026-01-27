@@ -5,5 +5,5 @@
     <string name="otp">get otp</string>
     <string name="otpverify">OTP Verification</string>
     <string name="otptext1">OTP send to +91-2304203944</string>
-    <string name="otpbuttontext">Enter OTP</string>
+    <string name="continuebtn">continue</string>
 </resources>

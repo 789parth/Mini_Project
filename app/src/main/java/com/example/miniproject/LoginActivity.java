@@ -31,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
         getOTP.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, OtpActivity.class);
             startActivity(intent);
+            finish();
         });
+
     }
 }

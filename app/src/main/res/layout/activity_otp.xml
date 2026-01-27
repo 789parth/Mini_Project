@@ -2,15 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/backlocation"
+    android:id="@+id/otp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/secondary"
+    android:elevation="5dp"
     android:padding="16dp"
     tools:context=".OtpActivity">
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button"
+        android:id="@+id/continueBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -18,7 +19,7 @@
         android:height="60dp"
         android:background="@drawable/buttoncolor"
         android:fontFamily="@font/roboto_medium"
-        android:text="@string/otpbuttontext"
+        android:text="@string/continuebtn"
         android:textColor="@color/secondary"
         app:layout_constraintEnd_toEndOf="@+id/editTextNumberPassword"
         app:layout_constraintStart_toStartOf="@+id/editTextNumberPassword"
@@ -65,13 +66,15 @@
         android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="32dp"
         android:background="@drawable/backgrouninput1"
+        android:elevation="5dp"
         android:ems="10"
         android:hint="Enter OTP"
         android:inputType="numberPassword"
         android:textAlignment="center"
         android:textColorHint="@color/textinblack"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
@@ -101,15 +104,8 @@
             android:layout_marginStart="4dp"
             android:fontFamily="@font/madaniarabic_regular"
             android:text="Resend OTP."
-            android:textColor="@color/secondary" />
+            android:textColor="@color/green" />
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/backotp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/backward" />
 </androidx.constraintlayout.widget.ConstraintLayout>
