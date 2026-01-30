@@ -6,4 +6,6 @@
     <string name="otpverify">OTP Verification</string>
     <string name="otptext1">OTP send to +91-2304203944</string>
     <string name="continuebtn">continue</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

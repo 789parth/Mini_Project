@@ -1,7 +1,9 @@
 package com.example.miniproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
@@ -16,6 +18,8 @@ public class LocationActivity extends AppCompatActivity {
 
     MaterialAutoCompleteTextView location;
     ImageView dropDownBtn;
+    Button continueBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,8 @@ public class LocationActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        continueBtn = findViewById(R.id.continueBtn2);
 
         String[] locations = {"Delhi", "Mumbai", "Pune", "Bangalore", "Rajkot", "Rajasthan", "Mahesana"};
 
@@ -43,9 +49,11 @@ public class LocationActivity extends AppCompatActivity {
 
         dropDownBtn.setOnClickListener(v -> location.showDropDown());
 
+        continueBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(LocationActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
     }
 }
-
-
-
-
