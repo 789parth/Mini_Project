@@ -10,12 +10,13 @@
     tools:context=".LoginActivity">
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextPhone"
-        app:layout_constraintStart_toStartOf="@+id/editTextPhone"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPhone">
+        app:layout_constraintEnd_toEndOf="@+id/passwordInput"
+        app:layout_constraintStart_toStartOf="@+id/passwordInput"
+        app:layout_constraintTop_toBottomOf="@+id/noAccount">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -23,10 +24,10 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/getotp"
+            android:id="@+id/login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -42,15 +43,14 @@
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:fontFamily="@font/madaniarabic_regular"
         android:text="@string/terms_conditions"
         android:textAlignment="center"
         android:textColor="@color/textinblack"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/passwordInput"
+        app:layout_constraintStart_toStartOf="@+id/passwordInput" />
 
     <TextView
         android:id="@+id/textView6"
@@ -92,8 +92,8 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
         android:fontFamily="@font/madaniarabic_bold"
         android:text="Login"
         android:textColor="@color/green"
@@ -107,27 +107,26 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:fontFamily="@font/madaniarabic_regular"
-        android:text="Enter your phone number to Proceed"
+        android:text="@string/enter_your_email_to_proceed"
         android:textColor="@color/text"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/textView8"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <EditText
-        android:id="@+id/editTextPhone"
+        android:id="@+id/emailInput"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="18dp"
         android:background="@drawable/backgrouninput1"
-        android:drawableLeft="@drawable/call"
         android:drawablePadding="15dp"
         android:elevation="5dp"
         android:ellipsize="none"
         android:ems="10"
         android:fontFamily="@font/madaniarabic_regular"
-        android:hint="Mobile Number"
-        android:inputType="phone"
+        android:hint="@string/enter_your_email"
+        android:inputType="textEmailAddress"
         android:paddingLeft="15dp"
         android:textColor="@color/text"
         android:textColorHint="@color/textinblack"
@@ -135,5 +134,40 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView8"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <EditText
+        android:id="@+id/passwordInput"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="18dp"
+        android:background="@drawable/backgrouninput1"
+        android:drawablePadding="15dp"
+        android:elevation="5dp"
+        android:ellipsize="none"
+        android:ems="10"
+        android:fontFamily="@font/madaniarabic_regular"
+        android:hint="Enter password"
+        android:inputType="textPassword"
+        android:paddingLeft="15dp"
+        android:textColor="@color/text"
+        android:textColorHint="@color/textinblack"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView8"
+        app:layout_constraintTop_toBottomOf="@+id/emailInput" />
+
+    <TextView
+        android:id="@+id/noAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/madaniarabic_regular"
+        android:text="Don't Have Account?"
+        android:textColor="@color/green"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/passwordInput"
+        app:layout_constraintStart_toStartOf="@+id/passwordInput"
+        app:layout_constraintTop_toBottomOf="@+id/passwordInput" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
