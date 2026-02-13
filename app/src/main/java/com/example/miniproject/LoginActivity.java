@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, LocationActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                                     String user = Objects.requireNonNull(auth.getCurrentUser()).getUid();
                                     database.child("users").child(user).child("email").setValue(email);
                                     database.child("users").child(user).child("password").setValue(password);
-                                    Intent intent = new Intent(this, LoginActivity.class);
+                                    Intent intent = new Intent(this, LocationActivity.class);
                                     startActivity(intent);
                                     finish();
                         } else {

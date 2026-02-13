@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/backlocation"
-    android:background="@color/black"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SplashScreen">
@@ -38,9 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/madaniarabic_medium"
-        android:text="Deliever Favorite Snaks"
+        android:text="Deliever Your Favorite Grocery"
         android:textAlignment="center"
-        android:textColor="@color/secondary"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
