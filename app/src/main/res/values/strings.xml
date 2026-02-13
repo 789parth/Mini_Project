@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Mini Project</string>
+    <string name="app_name">EasyCart</string>
     <string name="terms_conditions"><![CDATA[Terms & Conditions]]></string>
-    <string name="title">SnackAdda</string>
+    <string name="title">EasyCart</string>
     <string name="otp">Login</string>
     <string name="otpverify">OTP Verification</string>
     <string name="otptext1">OTP send to +91-2304203944</string>

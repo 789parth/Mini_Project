@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="22dp"
+    app:cardElevation="10dp"
+    app:strokeWidth="0dp"
+    android:backgroundTint="@android:color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Product Image -->
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/addtocartshape"
+            android:padding="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <!-- Product Name -->
+        <TextView
+            android:id="@+id/foodNamePopuler"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Tomato (1kg)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A"
+            android:layout_marginStart="14dp"
+            app:layout_constraintStart_toEndOf="@id/imageView5"
+            app:layout_constraintTop_toTopOf="@id/imageView5"
+            app:layout_constraintEnd_toStartOf="@id/btnOrder"/>
+
+        <!-- Product Description -->
+        <TextView
+            android:id="@+id/textViewDesc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Fresh organic grocery item directly from farm."
+            android:textSize="13sp"
+            android:textColor="#777777"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@id/foodNamePopuler"
+            app:layout_constraintTop_toBottomOf="@id/foodNamePopuler"
+            app:layout_constraintEnd_toStartOf="@id/btnOrder"/>
+
+        <!-- Price -->
+        <TextView
+            android:id="@+id/PricePopuar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="₹60"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#FF5722"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@id/textViewDesc"
+            app:layout_constraintTop_toBottomOf="@id/textViewDesc"/>
+
+        <!-- Order Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnOrder"
+            android:layout_width="95dp"
+            android:layout_height="38dp"
+            android:text="Order"
+            android:textAllCaps="false"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            app:cornerRadius="22dp"
+            app:backgroundTint="#6C5CE7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
