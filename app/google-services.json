@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "977943745571",
-    "project_id": "mini-project-80b81",
-    "storage_bucket": "mini-project-80b81.firebasestorage.app"
+    "project_number": "451391621088",
+    "project_id": "miniprojectpsj",
+    "storage_bucket": "miniprojectpsj.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:977943745571:android:69c604ff026d89c6520d96",
+        "mobilesdk_app_id": "1:451391621088:android:1bf6fd3b73a37d2bc7cd85",
         "android_client_info": {
           "package_name": "com.example.miniproject"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "451391621088-sdmhdb6desuavmmh1cg1sl066eq036i9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.miniproject",
+            "certificate_hash": "2e760433fb71b8c0cf13dd2ce30b062a422438ef"
+          }
+        },
+        {
+          "client_id": "451391621088-2qnec80ouit2c37s1j544278vot4jt07.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDWkgA9vDuUxbV9BqQQxPHdgM6BH9mVDuA"
+          "current_key": "AIzaSyCwHxqaynuVVpX0wZxdTWzT_xGtt3dZ88c"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "451391621088-2qnec80ouit2c37s1j544278vot4jt07.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -27,7 +27,7 @@
             android:visibility="gone" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/login"
+            android:id="@+id/createAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 

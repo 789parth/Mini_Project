@@ -26,9 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextPassword5"
-        app:layout_constraintStart_toStartOf="@+id/editTextPassword5"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword5">
+        app:layout_constraintEnd_toEndOf="@+id/cpass"
+        app:layout_constraintStart_toStartOf="@+id/cpass"
+        app:layout_constraintTop_toBottomOf="@+id/cpass">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -39,10 +39,9 @@
             android:visibility="gone" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/login"
+            android:id="@+id/createAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:width="150dp"
             android:height="60dp"
             android:background="@drawable/buttoncolor"
@@ -52,7 +51,7 @@
     </FrameLayout>
 
     <EditText
-        android:id="@+id/editTextPassword3"
+        android:id="@+id/email"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
@@ -64,17 +63,17 @@
         android:ems="10"
         android:fontFamily="@font/madaniarabic_regular"
         android:hint="Email"
-        android:inputType="textPassword"
+        android:inputType="textEmailAddress"
         android:paddingLeft="15dp"
         android:textColor="@color/text"
         android:textColorHint="@color/textinblack"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextPhone3"
-        app:layout_constraintStart_toStartOf="@+id/editTextPhone3"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPhone3" />
+        app:layout_constraintEnd_toEndOf="@+id/username"
+        app:layout_constraintStart_toStartOf="@+id/username"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <EditText
-        android:id="@+id/editTextPassword4"
+        android:id="@+id/pass"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="24dp"
@@ -91,12 +90,12 @@
         android:textColor="@color/text"
         android:textColorHint="@color/textinblack"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextPassword3"
-        app:layout_constraintStart_toStartOf="@+id/editTextPassword3"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword3" />
+        app:layout_constraintEnd_toEndOf="@+id/email"
+        app:layout_constraintStart_toStartOf="@+id/email"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
 
     <EditText
-        android:id="@+id/editTextPassword5"
+        android:id="@+id/cpass"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
@@ -113,13 +112,13 @@
         android:textColor="@color/text"
         android:textColorHint="@color/textinblack"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextPassword3"
+        app:layout_constraintEnd_toEndOf="@+id/email"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/editTextPassword3"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword4" />
+        app:layout_constraintStart_toStartOf="@+id/email"
+        app:layout_constraintTop_toBottomOf="@+id/pass" />
 
     <EditText
-        android:id="@+id/editTextPhone3"
+        android:id="@+id/username"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
