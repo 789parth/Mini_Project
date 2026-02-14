@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     Button loginBtn;
     EditText emailInput, passwordInput;
-    TextView noAccount;
+    TextView noAccount,fpass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
         noAccount = findViewById(R.id.noAccount);
+        fpass = findViewById(R.id.forgot_pass);
+
 
         loginBtn.setOnClickListener(v -> {
             String email = emailInput.getText().toString().trim();
@@ -79,6 +81,20 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, Objects.requireNonNull(task1.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
+                }
+            });
+        });
+
+        fpass.setOnClickListener(v -> {
+            if (emailInput.getText().toString().trim().isEmpty()) {
+                Toast.makeText(LoginActivity.this, "Please enter your email", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            auth.sendPasswordResetEmail(emailInput.getText().toString().trim()).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "Password reset email sent", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Error sending password reset email", Toast.LENGTH_SHORT).show();
                 }
             });
         });
