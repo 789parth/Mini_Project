@@ -86,18 +86,16 @@ public class SignupActivity extends AppCompatActivity {
                                 String user = Objects.requireNonNull(auth.getCurrentUser()).getUid();
                                 database.child("users").child(user).child("username").setValue(usernameText);
                                 database.child("users").child(user).child("email").setValue(emailText);
-                                database.child("users").child(user).child("password").setValue(passText);
+                                database.child("users").child(user).child("password").setValue(passText.hashCode());
                                 Intent intent = new Intent(this, LoginActivity.class);
                                 startActivity(intent);
                                 finish();
                             } else {
                                 Toast.makeText(this, "Account creation failed: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
-                                Log.d("Account", "createUserWithEmail:failure", task.getException());
                             }
                         });
             }
         });
-
 
         already = findViewById(R.id.alreadyAccount);
         already.setOnClickListener( v -> {

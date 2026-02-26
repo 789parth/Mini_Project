@@ -20,8 +20,6 @@ public class OtpActivity extends AppCompatActivity {
     EditText otp;
     String OtpBackend;
     String msg;
-    String senderEmail = "parthadthakkar@gmail.com";
-    String senderPassword = "@234abcDEF";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,7 @@ public class OtpActivity extends AppCompatActivity {
             }
             if (otp.getText().toString().trim().equals(OtpBackend)) {
                 Toast.makeText(OtpActivity.this, "OTP verified successfully", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(OtpActivity.this, ResetPasswordActivity.class);
+//                Intent intent = new Intent(OtpActivity.this, LoginActivity.class);
 //                intent.putExtra("emailId", getIntent().getStringExtra("emailId"));
 //                startActivity(intent);
 //                finish();
@@ -63,51 +61,5 @@ public class OtpActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-//        boolean sendEmail() {
-//
-//            StrictMode.ThreadPolicy policy =
-//                    new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//            StrictMode.setThreadPolicy(policy);
-//
-//            String to = receiverEmail.getText().toString().trim();
-//            String msg = message.getText().toString().trim();
-//
-//            Properties props = new Properties();
-//            props.put("mail.smtp.auth", "true");
-//            props.put("mail.smtp.starttls.enable", "true");
-//            props.put("mail.smtp.host", "smtp.gmail.com");
-//            props.put("mail.smtp.port", "587");
-//
-//            Session session = Session.getInstance(props,
-//                    new javax.mail.Authenticator() {
-//                        protected PasswordAuthentication getPasswordAuthentication() {
-//                            return new PasswordAuthentication(senderEmail, senderPassword);
-//                        }
-//                    });
-//
-//            try {
-//                Message message = new MimeMessage(session);
-//                message.setFrom(new InternetAddress(senderEmail));
-//                message.setRecipients(Message.RecipientType.TO,
-//                        InternetAddress.parse(to));
-//                message.setSubject("OTP Verification");
-//                message.setText("Your OTP is: 123456");
-//
-//                Transport.send(message);
-//
-//                Toast.makeText(this,
-//                        "Email Sent Successfully",
-//                        Toast.LENGTH_LONG).show();
-//                return true;
-//
-//            } catch (Exception e) {
-//                Toast.makeText(this,
-//                        "Error: " + e.getMessage(),
-//                        Toast.LENGTH_LONG).show();
-//                return false;
-//            }
-//        }
-
     }
 }

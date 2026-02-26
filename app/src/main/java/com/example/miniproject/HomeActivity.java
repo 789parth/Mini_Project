@@ -1,7 +1,6 @@
 package com.example.miniproject;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -29,8 +28,6 @@ public class HomeActivity extends AppCompatActivity {
         replaceFragment(new HomeFragment());
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-            Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
-
             int id = item.getItemId();
 
             if (id == R.id.menu_home) {

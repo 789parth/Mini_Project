@@ -1,14 +1,16 @@
 package com.example.miniproject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -29,6 +31,17 @@ public class LocationActivity extends AppCompatActivity {
     ImageView dropDownBtn;
     Button continueBtn;
 
+    private final ActivityResultLauncher<Intent> selectLocationLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    // Assumes SelectLocationActivity returns the location in an extra called "selectedLocation"
+                    if (data != null && data.hasExtra("selectedLocation")) {
+                        String selectedLocation = data.getStringExtra("selectedLocation");
+                        location.setText(selectedLocation, false);
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,20 +59,19 @@ public class LocationActivity extends AppCompatActivity {
 
         continueBtn = findViewById(R.id.continueBtn2);
 
-        String[] locations = {"Nana Bazaar","Mota Bazaar","BVM","Anand City","Shaan Cinema"};
-
         location = findViewById(R.id.locationDropdown);
         dropDownBtn = findViewById(R.id.downbtn);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                locations
-        );
+        dropDownBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(LocationActivity.this, SelectLocationActivity.class);
+            selectLocationLauncher.launch(intent);
+        });
 
-        location.setAdapter(adapter);
+        location.setOnClickListener(v -> {
+            Intent intent = new Intent(LocationActivity.this, SelectLocationActivity.class);
+            selectLocationLauncher.launch(intent);
+        });
 
-        dropDownBtn.setOnClickListener(v -> location.showDropDown());
 
         continueBtn.setOnClickListener(v -> {
             if (location.getText() == null || location.getText().toString().isEmpty()) {
@@ -70,7 +82,7 @@ public class LocationActivity extends AppCompatActivity {
             database.child("users").child(user).child("location").setValue(location.getText().toString());
             Toast.makeText(this, "Location set successfully", Toast.LENGTH_SHORT).show();
             Log.d("Location", "Location set successfully");
-            Intent intent = new Intent(LocationActivity.this, MainActivity.class);
+            Intent intent = new Intent(LocationActivity.this, HomeActivity.class);
             startActivity(intent);
             finish();
         });

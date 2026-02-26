@@ -2,7 +2,6 @@ package com.example.miniproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -64,23 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    auth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(this, task1 -> {
-                                if (task1.isSuccessful()) {
-                                    String userId = Objects.requireNonNull(auth.getCurrentUser()).getUid();
-                                    database.child("users").child(userId).child("email").setValue(email);
-                                    Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show();
-                                    Log.d("Account", "createUserWithEmail:success");
-                                    String user = Objects.requireNonNull(auth.getCurrentUser()).getUid();
-                                    database.child("users").child(user).child("email").setValue(email);
-                                    database.child("users").child(user).child("password").setValue(password);
-                                    Intent intent = new Intent(this, LocationActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                        } else {
-                            Toast.makeText(LoginActivity.this, Objects.requireNonNull(task1.getException()).getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         });
