@@ -42,6 +42,10 @@
             android:name=".StartActivity"
             android:exported="false" />
         <activity
+            android:name=".Dashboard"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity
             android:name=".SplashScreen"
             android:exported="true">
             <intent-filter>

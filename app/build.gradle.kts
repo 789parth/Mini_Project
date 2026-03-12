@@ -6,14 +6,12 @@ plugins {
 
 android {
     namespace = "com.example.miniproject"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.miniproject"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -60,6 +58,4 @@ dependencies {
     implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
-//    implementation("com.sun.mail:android-mail:1.6.7")
-//    implementation("com.sun.mail:android-activation:1.6.7")
 }
