@@ -25,7 +25,9 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        replaceFragment(new HomeFragment());
+        if (savedInstanceState == null) {
+            replaceFragment(new HomeFragment());
+        }
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -49,6 +51,13 @@ public class HomeActivity extends AppCompatActivity {
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // Add custom animations for smooth fragment transitions
+        fragmentTransaction.setCustomAnimations(
+            R.anim.fade_in,
+            R.anim.fade_out,
+            R.anim.fade_in,
+            R.anim.fade_out
+        );
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
     }

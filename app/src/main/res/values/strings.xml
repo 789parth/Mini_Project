@@ -6,9 +6,27 @@
     <string name="otpverify">OTP Verification</string>
     <string name="otptext1">OTP send to </string>
     <string name="continuebtn">continue</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_your_email_to_proceed">Enter your email to Proceed</string>
     <string name="enter_your_email">Enter your email</string>
     <string name="confirm_location">Confirm Location</string>
+    <string name="current_location">Current Location</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="search_location">Search location...</string>
+    <string name="choose_your_location">Choose Your Location</string>
+    <string name="choose_location">Choose Location</string>
+    <string name="deliver_favorite_snacks">Deliver Favorite Snacks</string>
+    <string name="login">Login</string>
+    <string name="enter_password">Enter password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="don_t_have_account">Don\'t Have Account?</string>
+    <string name="or_continue_with">Or Continue With</string>
+    <string name="google">Google</string>
+    <string name="sign_up_here">Sign Up Here</string>
+    <string name="user_name">User Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_have_an_account">Already Have An Account?</string>
 </resources>

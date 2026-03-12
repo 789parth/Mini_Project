@@ -12,7 +12,12 @@ import androidx.core.view.WindowInsetsCompat;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class SplashScreen extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +30,27 @@ public class SplashScreen extends AppCompatActivity {
             return insets;
         });
 
+        mAuth = FirebaseAuth.getInstance();
+
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
+                // Temporary disabled auto login
+                /*
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                Intent intent;
+                if (currentUser != null) {
+                    // User is already logged in, go to HomeActivity
+                    intent = new Intent(SplashScreen.this, HomeActivity.class);
+                } else {
+                    // No user is logged in, go to StartActivity
+                    intent = new Intent(SplashScreen.this, StartActivity.class);
+                }
+                */
                 Intent intent = new Intent(SplashScreen.this, StartActivity.class);
                 startActivity(intent);
                 finish(); // close splash activity
             }
-        }, 1000);
+        }, 1500);
     }
 }

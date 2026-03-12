@@ -6,9 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.miniproject"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.miniproject"
@@ -54,6 +52,7 @@ dependencies {
     implementation(libs.navigation.ui.ktx)
     implementation(libs.cardview)
     implementation(libs.firebase.database)
+    implementation(libs.play.services.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
