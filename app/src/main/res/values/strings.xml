@@ -29,4 +29,5 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="create_account">Create Account</string>
     <string name="already_have_an_account">Already Have An Account?</string>
+    <string name="rupee">₹ 100</string>
 </resources>

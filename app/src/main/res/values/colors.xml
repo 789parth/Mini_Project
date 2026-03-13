@@ -10,4 +10,11 @@
     <color name="startcolor">#1FC57A</color>
     <color name="red">#FF5A5F</color>
     <color name="bluegray">#37474F</color>
+
+    <color name="theme_orange">#fd6c02</color>
+    <color name="theme_light_orange">#fef2e5</color>
+    <color name="theme_black">#120b06</color>
+    <color name="theme_dark_gray">#595450</color>
+    <color name="theme_medium_gray">#C3595450</color>
+    <color name="theme_light_gray">#efefef</color>
 </resources>
