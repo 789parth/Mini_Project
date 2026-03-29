@@ -15,6 +15,7 @@ import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.miniproject.MenuBottomSheetFragment;
 import com.example.miniproject.R;
 import com.example.miniproject.adapter.PopularAdapter;
 import com.example.miniproject.databinding.FragmentHomeBinding;
@@ -92,6 +93,12 @@ public class HomeFragment extends Fragment {
         );
 
         binding.popularRecycleview.setAdapter(adapter);
+
+        // 🔹 View Menu Click Listener
+        binding.textViewMenu.setOnClickListener(v -> {
+            MenuBottomSheetFragment menuBottomSheetFragment = new MenuBottomSheetFragment();
+            menuBottomSheetFragment.show(getParentFragmentManager(), "MenuBottomSheetFragment");
+        });
     }
 
     @Override

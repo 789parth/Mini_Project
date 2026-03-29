@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.miniproject.databinding.CartItemsBinding;
+import com.example.miniproject.databinding.CartItemBinding;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @NonNull
     @Override
     public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        CartItemsBinding binding = CartItemsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        CartItemBinding binding = CartItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new CartViewHolder(binding);
     }
 
@@ -43,9 +43,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     public class CartViewHolder extends RecyclerView.ViewHolder {
-        private final CartItemsBinding binding;
+        private final CartItemBinding binding;
 
-        public CartViewHolder(CartItemsBinding binding) {
+        public CartViewHolder(CartItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

@@ -3,17 +3,21 @@ package com.example.miniproject;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -43,7 +47,7 @@ import java.util.Objects;
 
 public class SelectLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final int REQUEST_CHECK_SETTINGS = 1001;
+    private static final String TAG = "SelectLocationActivity";
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private GoogleMap mMap;
     private Button confirmButton;
@@ -54,6 +58,15 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
     private LatLng selectedLatLng;
     private String selectedAddress = "";
     private FusedLocationProviderClient fusedLocationClient;
+
+    private final ActivityResultLauncher<IntentSenderRequest> resolutionLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    fetchCurrentLocation();
+                } else {
+                    Toast.makeText(this, "Location services are required for this feature", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,18 +117,33 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
         String location = searchEditText.getText().toString();
         if (!location.isEmpty()) {
             Geocoder geocoder = new Geocoder(this);
-            try {
-                List<Address> addressList = geocoder.getFromLocationName(location, 1);
-                if (addressList != null && !addressList.isEmpty()) {
-                    Address address = addressList.get(0);
-                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                    updateMarker(latLng);
-                } else {
-                    Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                geocoder.getFromLocationName(location, 1, addresses -> {
+                    if (addresses != null && !addresses.isEmpty()) {
+                        Address address = addresses.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        runOnUiThread(() -> {
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                            updateMarker(latLng);
+                        });
+                    } else {
+                        runOnUiThread(() -> Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show());
+                    }
+                });
+            } else {
+                try {
+                    List<Address> addressList = geocoder.getFromLocationName(location, 1);
+                    if (addressList != null && !addressList.isEmpty()) {
+                        Address address = addressList.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                        updateMarker(latLng);
+                    } else {
+                        Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "Geocoder error", e);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         } else {
             Toast.makeText(this, "Enter a location to search", Toast.LENGTH_SHORT).show();
@@ -143,9 +171,10 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
             if (e instanceof ResolvableApiException) {
                 try {
                     ResolvableApiException resolvable = (ResolvableApiException) e;
-                    resolvable.startResolutionForResult(SelectLocationActivity.this, REQUEST_CHECK_SETTINGS);
-                } catch (IntentSender.SendIntentException sendEx) {
-                    // Ignore the error.
+                    IntentSenderRequest intentSenderRequest = new IntentSenderRequest.Builder(resolvable.getResolution()).build();
+                    resolutionLauncher.launch(intentSenderRequest);
+                } catch (Exception ex) {
+                    Log.e(TAG, "Error launching settings resolution", ex);
                 }
             }
         });
@@ -169,15 +198,11 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
                                 LatLng latLng = new LatLng(lastLoc.getLatitude(), lastLoc.getLongitude());
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                                 updateMarker(latLng);
-                            } else {
-                                fetchCurrentLocation();
                             }
                         });
                     }
                 })
-                .addOnFailureListener(e -> {
-                    fetchCurrentLocation();
-                });
+                .addOnFailureListener(e -> Log.e(TAG, "Location fetch failed", e));
     }
 
     @Override
@@ -188,18 +213,6 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
                 fetchCurrentLocation();
             } else {
                 Toast.makeText(this, "Location permission is required to find your position.", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CHECK_SETTINGS) {
-            if (resultCode == RESULT_OK) {
-                fetchCurrentLocation();
-            } else {
-                Toast.makeText(this, "Location services are required for this feature", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -225,15 +238,25 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
 
     private void getAddressFromLatLng(LatLng latLng) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-            if (addresses != null && !addresses.isEmpty()) {
-                selectedAddress = addresses.get(0).getAddressLine(0);
-            } else {
-                selectedAddress = "Unknown Location";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1, addresses -> {
+                if (addresses != null && !addresses.isEmpty()) {
+                    selectedAddress = addresses.get(0).getAddressLine(0);
+                } else {
+                    selectedAddress = "Unknown Location";
+                }
+            });
+        } else {
+            try {
+                List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                if (addresses != null && !addresses.isEmpty()) {
+                    selectedAddress = addresses.get(0).getAddressLine(0);
+                } else {
+                    selectedAddress = "Unknown Location";
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Error getting address", e);
             }
-        } catch (IOException e) {
-            Toast.makeText(this, "Error getting address", Toast.LENGTH_SHORT).show();
         }
     }
 }
