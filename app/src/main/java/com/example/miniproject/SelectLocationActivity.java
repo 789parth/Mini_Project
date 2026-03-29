@@ -157,7 +157,6 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
             return;
         }
 
-        // Use getCurrentLocation for a fresh location if getLastLocation is null or unavailable
         fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                 .addOnSuccessListener(this, location -> {
                     if (location != null) {
@@ -165,20 +164,19 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                         updateMarker(latLng);
                     } else {
-                        // Retry with getLastLocation as a fallback if getCurrentLocation fails
                         fusedLocationClient.getLastLocation().addOnSuccessListener(lastLoc -> {
                             if (lastLoc != null) {
                                 LatLng latLng = new LatLng(lastLoc.getLatitude(), lastLoc.getLongitude());
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                                 updateMarker(latLng);
                             } else {
-                                Toast.makeText(this, "Unable to fetch location. Please ensure GPS is active and try again.", Toast.LENGTH_SHORT).show();
+                                fetchCurrentLocation();
                             }
                         });
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Location error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    fetchCurrentLocation();
                 });
     }
 
@@ -199,7 +197,6 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CHECK_SETTINGS) {
             if (resultCode == RESULT_OK) {
-                // User enabled location, now retry fetching
                 fetchCurrentLocation();
             } else {
                 Toast.makeText(this, "Location services are required for this feature", Toast.LENGTH_SHORT).show();

@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="Home"
+    <item
+        android:title="Home"
         android:id="@+id/menu_home"
-        android:icon="@drawable/icon_home_active"/>
+        android:icon="@drawable/icon_home_active" />
 
-    <item android:title="Cart"
+    <item
+        android:title="Cart"
         android:id="@+id/menu_cart"
         android:icon="@drawable/notification_cart"/>
 
-    <item android:title="Search"
+    <item
+        android:title="Search"
         android:id="@+id/menu_search"
         android:icon="@drawable/search_refraction"/>
 
-    <item android:title="History"
+    <item
+        android:title="History"
         android:id="@+id/menu_history"
         android:icon="@drawable/list"/>
 
-    <item android:title="Profile"
+    <item
+        android:title="Profile"
         android:id="@+id/menu_profile"
         android:icon="@drawable/user_01"/>
 </menu>

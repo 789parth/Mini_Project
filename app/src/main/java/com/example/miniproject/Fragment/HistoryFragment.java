@@ -41,13 +41,13 @@ public class HistoryFragment extends Fragment {
 
         ArrayList<String> buyAgainFoodName = new ArrayList<>();
         buyAgainFoodName.add("Tomato (1kg)");
-        buyAgainFoodName.add("TATA Salt (1kg)");
         buyAgainFoodName.add("Kissan Mixed Fruit Jam (500g)");
+        buyAgainFoodName.add("TATA Salt (1kg)");
 
         ArrayList<String> buyAgainFoodPrice = new ArrayList<>();
         buyAgainFoodPrice.add("₹40");
-        buyAgainFoodPrice.add("₹28");
         buyAgainFoodPrice.add("₹110");
+        buyAgainFoodPrice.add("₹28");
 
         ArrayList<Integer> buyAgainFoodImage = new ArrayList<>();
         buyAgainFoodImage.add(R.drawable.menu1);

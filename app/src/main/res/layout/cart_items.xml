@@ -4,23 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="10dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
     app:cardCornerRadius="15dp"
-    app:cardElevation="2dp"
-    android:layout_margin="3dp">
+    app:cardElevation="5dp"
+    app:layout_marginBaseline="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_margin="3dp"
         android:background="@drawable/cart_items_bg">
 
         <ImageView
-            android:id="@+id/imageView9"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
+            android:id="@+id/cartImage"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:padding="1dp"
             android:background="@drawable/cart_items_image_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,86 +34,93 @@
             app:srcCompat="@drawable/menu1" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/productName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="2dp"
             android:fontFamily="@font/madaniarabic_medium"
             android:text="Orange"
             android:textColor="@color/theme_dark_gray"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/imageView9"
-            app:layout_constraintTop_toTopOf="@+id/imageView9" />
+            app:layout_constraintStart_toEndOf="@+id/cartImage"
+            app:layout_constraintTop_toTopOf="@+id/cartImage" />
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/productWeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
             android:fontFamily="@font/madaniarabic_regular"
             android:text=" 500 gm"
             android:textColor="@color/theme_medium_gray"
             android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/imageView9"
-            app:layout_constraintTop_toBottomOf="@+id/textView14" />
+            app:layout_constraintStart_toEndOf="@+id/cartImage"
+            app:layout_constraintTop_toBottomOf="@+id/productName" />
 
         <TextView
-            android:id="@+id/textView18"
+            android:id="@+id/productPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:fontFamily="@font/madaniarabic_bold"
             android:textColor="@color/theme_black"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView9"
+            app:layout_constraintStart_toEndOf="@+id/cartImage"
+            app:layout_constraintTop_toBottomOf="@+id/productWeight"
+            app:layout_constraintVertical_bias="0.333"
             tools:text="@string/rupee" />
 
         <ImageView
-            android:id="@+id/imageView10"
+            android:id="@+id/delete"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="18dp"
             android:background="@drawable/cart_items_delete_bg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/delete_icon" />
 
         <ImageView
-            android:id="@+id/imageView12"
+            android:id="@+id/minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView13"
-            app:layout_constraintEnd_toStartOf="@+id/textView29"
-            app:layout_constraintTop_toTopOf="@+id/imageView13"
+            android:layout_marginEnd="14dp"
+            app:layout_constraintBottom_toBottomOf="@+id/plus"
+            app:layout_constraintEnd_toStartOf="@+id/quantity"
+            app:layout_constraintTop_toTopOf="@+id/plus"
             app:srcCompat="@drawable/minus_icon" />
 
         <ImageView
-            android:id="@+id/imageView13"
+            android:id="@+id/plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/delete"
             app:srcCompat="@drawable/plus_icon" />
 
         <TextView
-            android:id="@+id/textView29"
+            android:id="@+id/quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="14dp"
             android:fontFamily="@font/roboto_medium"
             android:text="1"
             android:textAlignment="center"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView13"
-            app:layout_constraintEnd_toStartOf="@+id/imageView13"
-            app:layout_constraintTop_toTopOf="@+id/imageView13" />
+            app:layout_constraintBottom_toBottomOf="@+id/plus"
+            app:layout_constraintEnd_toStartOf="@+id/plus"
+            app:layout_constraintTop_toTopOf="@+id/plus" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -1,16 +1,15 @@
 package com.example.miniproject.Fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -88,11 +87,11 @@ public class HomeFragment extends Fragment {
 
         PopularAdapter adapter = new PopularAdapter(foodName, price, populerFoodImages);
 
-        binding.popluarRecycleview.setLayoutManager(
+        binding.popularRecycleview.setLayoutManager(
                 new LinearLayoutManager(requireContext())
         );
 
-        binding.popluarRecycleview.setAdapter(adapter);
+        binding.popularRecycleview.setAdapter(adapter);
     }
 
     @Override

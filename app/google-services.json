@@ -1,10 +1,43 @@
 {
   "project_info": {
     "project_number": "451391621088",
+    "firebase_url": "https://miniprojectpsj-default-rtdb.firebaseio.com",
     "project_id": "miniprojectpsj",
     "storage_bucket": "miniprojectpsj.firebasestorage.app"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451391621088:android:004e3da3515e8328c7cd85",
+        "android_client_info": {
+          "package_name": "com.example.easycartadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "451391621088-emjlo6sha2t65nu2ou8td6p72q5gam2j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKCwPh4ftno4Ffn9rQXS_e1N0iPsy9l9w"
+        },
+        {
+          "current_key": "AIzaSyCwHxqaynuVVpX0wZxdTWzT_xGtt3dZ88c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "451391621088-2qnec80ouit2c37s1j544278vot4jt07.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:451391621088:android:1bf6fd3b73a37d2bc7cd85",
@@ -22,11 +55,14 @@
           }
         },
         {
-          "client_id": "451391621088-2qnec80ouit2c37s1j544278vot4jt07.apps.googleusercontent.com",
+          "client_id": "451391621088-emjlo6sha2t65nu2ou8td6p72q5gam2j.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
+        {
+          "current_key": "AIzaSyBKCwPh4ftno4Ffn9rQXS_e1N0iPsy9l9w"
+        },
         {
           "current_key": "AIzaSyCwHxqaynuVVpX0wZxdTWzT_xGtt3dZ88c"
         }
