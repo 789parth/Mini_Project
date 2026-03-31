@@ -11,8 +11,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SplashScreen extends AppCompatActivity {
@@ -24,6 +24,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash_screen);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.backlocation), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -35,25 +36,26 @@ public class SplashScreen extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             if (currentUser != null) {
-                // If a user session exists locally, verify it with Firebase (e.g., check if account was deleted)
-                currentUser.reload().addOnCompleteListener(task -> {
+                // Force a token refresh to verify if the account still exists on the server
+                currentUser.getIdToken(true).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // User is valid and account exists in Firebase Auth
+                        // Token refreshed successfully, user is still valid
                         startActivity(new Intent(SplashScreen.this, HomeActivity.class));
                     } else {
-                        // If reload fails, check if it's because the user is no longer valid (deleted/disabled)
-                        if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-                            mAuth.signOut(); // Clear the local session
-                            startActivity(new Intent(SplashScreen.this, StartActivity.class));
-                        } else {
-                            // Likely a network error, we proceed with the cached session for offline support
+                        // Refresh failed. Check if it's a network error or an auth error
+                        if (task.getException() instanceof FirebaseNetworkException) {
+                            // Network error: allow access via cached session for offline support
                             startActivity(new Intent(SplashScreen.this, HomeActivity.class));
+                        } else {
+                            // Auth error (e.g., account deleted or disabled): sign out and go to login
+                            mAuth.signOut();
+                            startActivity(new Intent(SplashScreen.this, StartActivity.class));
                         }
                     }
                     finish();
                 });
             } else {
-                // No user found locally, redirect to onboarding
+                // No cached user session found
                 startActivity(new Intent(SplashScreen.this, StartActivity.class));
                 finish();
             }
