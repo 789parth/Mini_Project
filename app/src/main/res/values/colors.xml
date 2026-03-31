@@ -17,4 +17,6 @@
     <color name="theme_dark_gray">#595450</color>
     <color name="theme_medium_gray">#C3595450</color>
     <color name="theme_light_gray">#efefef</color>
+
+    <color name="category_card_bg">#eef7ff</color>
 </resources>

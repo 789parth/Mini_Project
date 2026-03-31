@@ -91,7 +91,8 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:hint="Search products..."
-                        android:textSize="14sp"/>
+                        android:textSize="14sp"
+                        tools:ignore="TouchTargetSizeCheck" />
                 </LinearLayout>
 
                 <ImageView
@@ -248,7 +249,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/categoryview"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
 
                 <ProgressBar
                     android:id="@+id/progressBarCategory"

@@ -1,6 +1,10 @@
 package com.example.miniproject;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -10,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.miniproject.Fragment.CartFragment;
 import com.example.miniproject.Fragment.HistoryFragment;
 import com.example.miniproject.Fragment.HomeFragment;
+import com.example.miniproject.Fragment.HomeFragment1;
 import com.example.miniproject.Fragment.ProfileFragment;
 import com.example.miniproject.Fragment.SearchFragment;
 import com.example.miniproject.databinding.ActivityHomeBinding;
@@ -17,6 +22,7 @@ import com.example.miniproject.databinding.ActivityHomeBinding;
 public class HomeActivity extends AppCompatActivity {
 
     ActivityHomeBinding binding;
+    LinearLayout searchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +32,15 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         if (savedInstanceState == null) {
-            replaceFragment(new HomeFragment());
+            replaceFragment(new HomeFragment1());
+
         }
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.menu_home) {
-                replaceFragment(new HomeFragment());
+                replaceFragment(new HomeFragment1());
             } else if (id == R.id.menu_cart) {
                 replaceFragment(new CartFragment());
             } else if (id == R.id.menu_search) {
