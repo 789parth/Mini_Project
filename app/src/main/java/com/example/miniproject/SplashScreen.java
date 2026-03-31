@@ -2,6 +2,8 @@ package com.example.miniproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,10 +11,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import android.os.Handler;
-import android.os.Looper;
-
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SplashScreen extends AppCompatActivity {
@@ -32,24 +32,30 @@ public class SplashScreen extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Temporary disabled auto login
-                /*
-                FirebaseUser currentUser = mAuth.getCurrentUser();
-                Intent intent;
-                if (currentUser != null) {
-                    // User is already logged in, go to HomeActivity
-                    intent = new Intent(SplashScreen.this, HomeActivity.class);
-                } else {
-                    // No user is logged in, go to StartActivity
-                    intent = new Intent(SplashScreen.this, StartActivity.class);
-                }
-                */
-                Intent intent = new Intent(SplashScreen.this, StartActivity.class);
-                startActivity(intent);
-                finish(); // close splash activity
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if (currentUser != null) {
+                // If a user session exists locally, verify it with Firebase (e.g., check if account was deleted)
+                currentUser.reload().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // User is valid and account exists in Firebase Auth
+                        startActivity(new Intent(SplashScreen.this, HomeActivity.class));
+                    } else {
+                        // If reload fails, check if it's because the user is no longer valid (deleted/disabled)
+                        if (task.getException() instanceof FirebaseAuthInvalidUserException) {
+                            mAuth.signOut(); // Clear the local session
+                            startActivity(new Intent(SplashScreen.this, StartActivity.class));
+                        } else {
+                            // Likely a network error, we proceed with the cached session for offline support
+                            startActivity(new Intent(SplashScreen.this, HomeActivity.class));
+                        }
+                    }
+                    finish();
+                });
+            } else {
+                // No user found locally, redirect to onboarding
+                startActivity(new Intent(SplashScreen.this, StartActivity.class));
+                finish();
             }
         }, 1500);
     }
