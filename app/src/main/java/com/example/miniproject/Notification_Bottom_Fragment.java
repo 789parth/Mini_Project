@@ -40,7 +40,7 @@ public class Notification_Bottom_Fragment extends BottomSheetDialogFragment {
         notifications.add("Congrats Your Order Placed");
 
         ArrayList<Integer> notificationImages = new ArrayList<>();
-        notificationImages.add(R.drawable.sademoji); // Replace with your actual drawables
+        notificationImages.add(R.drawable.sademoji);
         notificationImages.add(R.drawable.truck);
         notificationImages.add(R.drawable.completed);
 

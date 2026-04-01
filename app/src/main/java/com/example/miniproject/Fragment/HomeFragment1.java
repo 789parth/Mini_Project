@@ -1,21 +1,24 @@
 package com.example.miniproject.Fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.miniproject.DetailsBottomSheetFragment;
 import com.example.miniproject.R;
 import com.example.miniproject.adapter.categoryadapter;
 import com.example.miniproject.adapter.productadapter;
@@ -26,27 +29,38 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-
 public class HomeFragment1 extends Fragment {
 
+    TextView viewAll;
     ImageSlider imageSlider;
-    RecyclerView recViewTrending,recViewCategory,recViewList1;
-    productadapter adapter,listAdapter1;
+    RecyclerView recViewTrending, recViewCategory, recViewList1;
+    productadapter adapter, listAdapter1;
     categoryadapter adapter1;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home1, container, false);
+
+        viewAll = view.findViewById(R.id.viewAll);
+        viewAll.setOnClickListener(v -> {
+            DetailsBottomSheetFragment detailsBottomSheetFragment = new DetailsBottomSheetFragment();
+            
+            // Passing sample data so it doesn't appear empty
+            Bundle bundle = new Bundle();
+            bundle.putString("name", "Trending Items");
+            bundle.putString("image", "android.resource://com.example.miniproject/" + R.drawable.banner1);
+            bundle.putString("description", "Explore our top trending items of the day. Fresh and high-quality groceries delivered to your doorstep.");
+            bundle.putString("ingredients", "Fresh Fruits, Vegetables, Dairy Products");
+            
+            detailsBottomSheetFragment.setArguments(bundle);
+            detailsBottomSheetFragment.show(getParentFragmentManager(), "DetailsBottomSheetFragment");
+        });
 
         ArrayList<SlideModel> imageList = new ArrayList<>();
         imageList.add(new SlideModel(R.drawable.banner1, ScaleTypes.FIT));
@@ -71,7 +85,7 @@ public class HomeFragment1 extends Fragment {
             }
         });
 
-        //Terending recycler view.
+        //Trending recycler view.
         recViewTrending = view.findViewById(R.id.recViewTrending);
         recViewTrending.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -102,16 +116,12 @@ public class HomeFragment1 extends Fragment {
         recViewCategory.setAdapter(adapter1);
 
         recViewCategory.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            recViewCategory.requestLayout();
+            if (recViewCategory != null) {
+                recViewCategory.requestLayout();
+            }
         });
 
-        //List section.
-
-
-        // =========================
-        // List-1
-        // =========================
-
+        //List-1 section.
         recViewList1 = view.findViewById(R.id.recViewList1);
         recViewList1.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -124,24 +134,22 @@ public class HomeFragment1 extends Fragment {
         listAdapter1 = new productadapter(options2);
         recViewList1.setAdapter(listAdapter1);
 
-
-
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        adapter.startListening();
-        adapter1.startListening();
-        listAdapter1.startListening();
+        if (adapter != null) adapter.startListening();
+        if (adapter1 != null) adapter1.startListening();
+        if (listAdapter1 != null) listAdapter1.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        adapter.stopListening();
-        adapter1.stopListening();
-        listAdapter1.stopListening();
+        if (adapter != null) adapter.stopListening();
+        if (adapter1 != null) adapter1.stopListening();
+        if (listAdapter1 != null) listAdapter1.stopListening();
     }
 }
