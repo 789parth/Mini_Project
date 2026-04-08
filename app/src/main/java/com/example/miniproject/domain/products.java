@@ -1,85 +1,103 @@
 package com.example.miniproject.domain;
 
 public class products {
-    String Category,ImagePath,Name,ProductId,Quntity,StoreId;
-    int Price;
-    boolean TrendingItem;
+    String category_id,category_name,product_description,product_id,product_image,product_name,product_unit;
+    int product_price,product_quantity;
+    boolean trending_item;
 
     public products(){
     }
 
-    public products(String category, String imagePath, String name, String productId, String quntity, String storeId, int price, boolean trendingItem) {
-        Category = category;
-        ImagePath = imagePath;
-        Name = name;
-        ProductId = productId;
-        Quntity = quntity;
-        StoreId = storeId;
-        Price = price;
-        TrendingItem = trendingItem;
+    public products(String category_id, String category_name, String product_description, String product_id, String product_image, String product_name, String product_unit, int product_price, int product_quantity, boolean trending_item) {
+        this.category_id = category_id;
+        this.category_name = category_name;
+        this.product_description = product_description;
+        this.product_id = product_id;
+        this.product_image = product_image;
+        this.product_name = product_name;
+        this.product_unit = product_unit;
+        this.product_price = product_price;
+        this.product_quantity = product_quantity;
+        this.trending_item = trending_item;
     }
 
-    public String getCategory() {
-        return Category;
+    public String getCategory_id() {
+        return category_id;
     }
 
-    public void setCategory(String category) {
-        Category = category;
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
     }
 
-    public boolean isTrendingItem() {
-        return TrendingItem;
+    public String getCategory_name() {
+        return category_name;
     }
 
-    public void setTrendingItem(boolean trendingItem) {
-        TrendingItem = trendingItem;
+    public void setCategory_name(String category_name) {
+        this.category_name = category_name;
     }
 
-    public String getImagePath() {
-        return ImagePath;
+    public String getProduct_description() {
+        return product_description;
     }
 
-    public void setImagePath(String imagePath) {
-        ImagePath = imagePath;
+    public void setProduct_description(String product_description) {
+        this.product_description = product_description;
     }
 
-    public String getName() {
-        return Name;
+    public String getProduct_id() {
+        return product_id;
     }
 
-    public void setName(String name) {
-        Name = name;
+    public void setProduct_id(String product_id) {
+        this.product_id = product_id;
     }
 
-    public String getProductId() {
-        return ProductId;
+    public String getProduct_image() {
+        return product_image;
     }
 
-    public void setProductId(String productId) {
-        ProductId = productId;
+    public void setProduct_image(String product_image) {
+        this.product_image = product_image;
     }
 
-    public String getQuntity() {
-        return Quntity;
+    public String getProduct_unit() {
+        return product_unit;
     }
 
-    public void setQuntity(String quntity) {
-        Quntity = quntity;
+    public void setProduct_unit(String product_unit) {
+        this.product_unit = product_unit;
     }
 
-    public String getStoreId() {
-        return StoreId;
+    public String getProduct_name() {
+        return product_name;
     }
 
-    public void setStoreId(String storeId) {
-        StoreId = storeId;
+    public void setProduct_name(String product_name) {
+        this.product_name = product_name;
     }
 
-    public int getPrice() {
-        return Price;
+    public int getProduct_price() {
+        return product_price;
     }
 
-    public void setPrice(int price) {
-        Price = price;
+    public void setProduct_price(int product_price) {
+        this.product_price = product_price;
+    }
+
+    public int getProduct_quantity() {
+        return product_quantity;
+    }
+
+    public void setProduct_quantity(int product_quantity) {
+        this.product_quantity = product_quantity;
+    }
+
+    public boolean isTrending_item() {
+        return trending_item;
+    }
+
+    public void setTrending_item(boolean trending_item) {
+        this.trending_item = trending_item;
     }
 }

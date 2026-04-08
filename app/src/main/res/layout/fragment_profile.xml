@@ -1,17 +1,601 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFF"
     tools:context=".Fragment.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="profile"
-        android:layout_gravity="center"
-        android:textSize="20sp"/>
+        android:orientation="vertical"
+        android:padding="16dp">
 
-</FrameLayout>
+        <!-- Profile Header Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:layout_marginBottom="20dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="#FF6600">
+
+                <TextView
+                    android:id="@+id/tvProfileName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User Mane"
+                    android:textColor="#FFF"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvProfileEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="email"
+                    android:textColor="#FFF"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvProfilePhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Phone Number"
+                    android:textColor="#FFF"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- My Account Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="3dp"
+            android:layout_marginBottom="16dp">
+            <LinearLayout
+                android:id="@+id/layoutMyAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="#FFF"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_menu_view"
+                        app:tint="#FF6600"
+                        android:contentDescription="account" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:text="my account"
+                        android:textColor="#222"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:id="@+id/ivAccountExpand"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/arrow_down_float"
+                        android:tint="#FF6600"
+                        android:contentDescription="expand" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layoutAccountDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="16dp">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#F0F0F0"
+                        android:layout_marginBottom="12dp" />
+                    <!-- View Mode -->
+                    <LinearLayout
+                        android:id="@+id/layoutAccountView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="12dp">
+                                <TextView
+                                    android:layout_width="80dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Name:"
+                                    android:textStyle="bold"
+                                    android:textColor="#666"
+                                    android:textSize="13sp" />
+                                <TextView
+                                    android:id="@+id/tvAccountName"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="SANJU"
+                                    android:textStyle="bold"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="12dp">
+                                <TextView
+                                    android:layout_width="80dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Email:"
+                                    android:textStyle="bold"
+                                    android:textColor="#666"
+                                    android:textSize="13sp" />
+                                <TextView
+                                    android:id="@+id/tvAccountEmail"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="sandiparmar1421@gmail.com"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="80dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Phone:"
+                                    android:textStyle="bold"
+                                    android:textColor="#666"
+                                    android:textSize="13sp" />
+                                <TextView
+                                    android:id="@+id/tvAccountPhone"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="7096348720"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/ivEditAccount"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="12dp"
+                            android:contentDescription="edit_account"
+                            android:src="@android:drawable/ic_menu_edit"
+                            android:tint="#FF6600" />
+                    </LinearLayout>
+                    <!-- Edit Mode -->
+                    <LinearLayout
+                        android:id="@+id/layoutAccountEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                        <EditText
+                            android:id="@+id/etAccountName"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:hint="enter_name"
+                            android:textSize="14sp"
+                            android:padding="12dp"
+                            android:layout_marginBottom="12dp"
+                            android:background="@drawable/edit_text_bg"
+                            android:textColorHint="#999" />
+                        <EditText
+                            android:id="@+id/etAccountEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:hint="enter_email"
+                            android:inputType="textEmailAddress"
+                            android:textSize="14sp"
+                            android:padding="12dp"
+                            android:layout_marginBottom="12dp"
+                            android:background="@drawable/edit_text_bg"
+                            android:textColorHint="#999" />
+                        <EditText
+                            android:id="@+id/etAccountPhone"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:hint="enter_phone"
+                            android:inputType="phone"
+                            android:textSize="14sp"
+                            android:padding="12dp"
+                            android:layout_marginBottom="16dp"
+                            android:background="@drawable/edit_text_bg"
+                            android:textColorHint="#999" />
+                        <Button
+                            android:id="@+id/btnSaveAccount"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:text="save_changes"
+                            android:textColor="#FFF"
+                            android:textStyle="bold"
+                            android:background="@drawable/button_gradient_bg" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Help Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="3dp"
+            android:layout_marginBottom="20dp">
+            <LinearLayout
+                android:id="@+id/layoutHelp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="#FFF"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_menu_help"
+                        android:contentDescription="help_text"
+                        app:tint="#FF6600" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:text="help"
+                        android:textColor="#222"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:id="@+id/ivHelpExpand"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/arrow_down_float"
+                        android:tint="#FF6600"
+                        android:contentDescription="expand" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layoutHelpDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="16dp">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#F0F0F0"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Customer Support Card -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="2dp"
+                        android:layout_marginBottom="12dp">
+                        <LinearLayout
+                            android:id="@+id/layoutCustomerSupport"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="#FFF8F5"
+                            android:padding="14dp"
+                            android:clickable="true"
+                            android:focusable="true">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@android:drawable/ic_menu_call"
+                                    android:tint="#FF6600"
+                                    android:contentDescription="customer_support" />
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Customer Support"
+                                    android:textStyle="bold"
+                                    android:textSize="15sp"
+                                    android:textColor="#222"
+                                    android:layout_marginStart="10dp" />
+                                <ImageView
+                                    android:id="@+id/ivCustomerSupportExpand"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@android:drawable/arrow_down_float"
+                                    android:tint="#FF6600"
+                                    android:contentDescription="expand" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/layoutCustomerSupportDetails"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:visibility="gone"
+                                android:paddingTop="12dp">
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="#F0E0D8"
+                                    android:layout_marginBottom="10dp" />
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Support Team Contact"
+                                    android:textStyle="bold"
+                                    android:textSize="12sp"
+                                    android:textColor="#666" />
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="📞 +91-9876543210"
+                                    android:textSize="14sp"
+                                    android:textColor="#FF6600"
+                                    android:layout_marginTop="8dp"
+                                    android:textStyle="bold" />
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Available: Mon-Fri, 10 AM - 6 PM"
+                                    android:textSize="12sp"
+                                    android:textColor="#999"
+                                    android:layout_marginTop="6dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- FAQs Card -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="2dp">
+                        <LinearLayout
+                            android:id="@+id/layoutFaqsBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="#F5F8FF"
+                            android:padding="14dp"
+                            android:clickable="true"
+                            android:focusable="true">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@android:drawable/ic_menu_info_details"
+                                    android:tint="#FF6600"
+                                    android:contentDescription="faqs" />
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="FAQs"
+                                    android:textStyle="bold"
+                                    android:textSize="15sp"
+                                    android:textColor="#222"
+                                    android:layout_marginStart="10dp" />
+                                <ImageView
+                                    android:id="@+id/ivFaqsExpand"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@android:drawable/arrow_down_float"
+                                    android:tint="#FF6600"
+                                    android:contentDescription="expand" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/layoutFaqs"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:visibility="gone"
+                                android:paddingTop="12dp">
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="#D8E8F0"
+                                    android:layout_marginBottom="10dp" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:paddingBottom="10dp">
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="❓ How do I change my password?"
+                                        android:textStyle="bold"
+                                        android:textSize="13sp"
+                                        android:textColor="#222" />
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Go to My Account and select 'Change Password'."
+                                        android:textSize="12sp"
+                                        android:textColor="#666"
+                                        android:layout_marginTop="4dp" />
+                                </LinearLayout>
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="#E8E8E8"
+                                    android:layout_marginVertical="8dp" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:paddingBottom="10dp">
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="❓ How do I contact support?"
+                                        android:textStyle="bold"
+                                        android:textSize="13sp"
+                                        android:textColor="#222" />
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Use the Customer Support option or call us at +91-9876543210."
+                                        android:textSize="12sp"
+                                        android:textColor="#666"
+                                        android:layout_marginTop="4dp" />
+                                </LinearLayout>
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="#E8E8E8"
+                                    android:layout_marginVertical="8dp" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="❓ How do I update my profile?"
+                                        android:textStyle="bold"
+                                        android:textSize="13sp"
+                                        android:textColor="#222" />
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Click on My Account and edit your details."
+                                        android:textSize="12sp"
+                                        android:textColor="#666"
+                                        android:layout_marginTop="4dp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Past Orders Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp"
+            android:background="#F5F5F5"
+            android:padding="8dp"
+            android:text="past_orders"
+            android:textColor="#888"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Example Past Order Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFF"
+            android:elevation="1dp"
+            android:padding="12dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="#FFF">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="order_title"
+                    android:textColor="#222"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="delivered"
+                    android:textColor="#388E3C"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="order_location"
+                android:textColor="#666"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="order_price"
+                android:textColor="#222"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="order_items"
+                android:textColor="#666"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="order_time"
+                android:textColor="#AAA"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
+
+

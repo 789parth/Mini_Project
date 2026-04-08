@@ -7,30 +7,45 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.miniproject.R;
 import com.example.miniproject.domain.categorys;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.example.miniproject.R;
 
-public class categoryadapter extends FirebaseRecyclerAdapter<categorys,categoryadapter.myviewholder> {
-    public categoryadapter(@NonNull FirebaseRecyclerOptions<categorys> options) {
-        super(options);
+import java.util.ArrayList;
+
+public class categoryadapter extends RecyclerView.Adapter<categoryadapter.myviewholder> {
+
+    ArrayList<categorys> list;
+
+    public categoryadapter(ArrayList<categorys> list) {
+        this.list = list;
     }
 
-    @Override
-    protected void onBindViewHolder(@NonNull myviewholder holder, int position, @NonNull categorys model) {
-        holder.name.setText(model.getCategory_title());
-        Glide.with(holder.img.getContext()).load(model.getCategory_image()).into(holder.img);
-    }
 
     @NonNull
     @Override
     public myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.categoryitems,parent,false);
         return new myviewholder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull myviewholder holder, int position) {
+        categorys model = list.get(position);
+        if (model == null) return;
+
+        holder.name.setText(model.getCategory_title());
+        Glide.with(holder.img.getContext()).load(model.getCategory_image()).into(holder.img);
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return list != null ? list.size() : 0;
     }
 
     public class myviewholder extends RecyclerView.ViewHolder{

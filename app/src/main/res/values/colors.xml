@@ -19,4 +19,5 @@
     <color name="theme_light_gray">#efefef</color>
 
     <color name="category_card_bg">#eef7ff</color>
+    <color name="product_card_bg">#F8F1E9</color>
 </resources>
