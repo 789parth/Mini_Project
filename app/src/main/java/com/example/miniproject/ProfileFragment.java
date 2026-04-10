@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.miniproject.ManagerClass.SessionManager;
 import com.example.miniproject.R;
 
 import android.widget.Button;
@@ -35,6 +36,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        SessionManager sessionManager = new SessionManager(requireContext());
 
         LinearLayout layoutMyAccount = view.findViewById(R.id.layoutMyAccount);
         LinearLayout layoutAccountDetails = view.findViewById(R.id.layoutAccountDetails);

@@ -21,6 +21,7 @@ import androidx.credentials.GetCredentialRequest;
 import androidx.credentials.GetCredentialResponse;
 import androidx.credentials.exceptions.GetCredentialException;
 
+import com.example.miniproject.ManagerClass.SessionManager;
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.firebase.auth.AuthCredential;
@@ -36,6 +37,7 @@ import java.util.concurrent.Executors;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private SessionManager sessionManager;
     private FirebaseAuth auth;
     private DatabaseReference database;
     private EditText emailInput, passwordInput;
@@ -54,6 +56,8 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        sessionManager = new SessionManager(this);
 
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance().getReference();
@@ -90,10 +94,28 @@ public class LoginActivity extends AppCompatActivity {
             }
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, LocationActivity.class);
-                    startActivity(intent);
-                    finish();
+
+                    FirebaseUser user = auth.getCurrentUser();
+
+                    if (user != null) {
+
+                        DatabaseReference userRef = database.child("users").child(user.getUid());
+
+                        userRef.get().addOnSuccessListener(snapshot -> {
+
+                            // SAVE in session====================================
+                            String sessionName = snapshot.child("username").getValue(String.class);
+                            String sessionEmail = snapshot.child("email").getValue(String.class);
+
+                            sessionManager.saveUser(user.getUid() ,sessionName, "", sessionEmail);
+                            //=====================================================
+
+                            Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
+
+                            startActivity(new Intent(LoginActivity.this, LocationActivity.class));
+                            finish();
+                        });
+                    }
                 } else {
                     Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -164,7 +186,8 @@ public class LoginActivity extends AppCompatActivity {
                             DatabaseReference userRef = database.child("users").child(user.getUid());
                             userRef.child("email").setValue(user.getEmail());
                             userRef.child("username").setValue(user.getDisplayName());
-                            
+
+                            sessionManager.saveUser(user.getUid() ,user.getDisplayName(),"", user.getEmail());
                             Intent intent = new Intent(LoginActivity.this, LocationActivity.class);
                             startActivity(intent);
                             finish();

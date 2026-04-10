@@ -24,6 +24,7 @@ import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.miniproject.DetailsBottomSheetFragment;
+import com.example.miniproject.ManagerClass.SessionManager;
 import com.example.miniproject.R;
 import com.example.miniproject.StartActivity;
 import com.example.miniproject.ViewModels.CategoryViewModel;
@@ -39,7 +40,8 @@ import java.util.ArrayList;
 
 public class HomeFragment1 extends Fragment {
 
-    TextView viewAll;
+    private SessionManager sessionManager;
+    TextView viewAll,textView2;
     ImageSlider imageSlider;
     ImageView logoutBtn;
     RecyclerView recViewTrending, recViewCategory, recViewList1;
@@ -59,6 +61,12 @@ public class HomeFragment1 extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home1, container, false);
+
+        //session manager initialize and set username.
+        sessionManager = new SessionManager(requireContext());
+
+        textView2 = view.findViewById(R.id.textView2);
+        textView2.setText(sessionManager.getUsername());
 
         //Progess bar
         list1Progress = view.findViewById(R.id.progressBarList1);
@@ -119,14 +127,15 @@ public class HomeFragment1 extends Fragment {
 
 
         logoutBtn = view.findViewById(R.id.logoutBtn);
-        logout();
+        logoutBtn.setOnClickListener(v -> {
+            logout();
+        });
 
 
         return view;
     }
 
     private void logout() {
-        logoutBtn.setOnClickListener(v -> {
 
             new AlertDialog.Builder(requireContext())
                     .setTitle("Logout")
@@ -136,6 +145,9 @@ public class HomeFragment1 extends Fragment {
                         // 🔴 Firebase logout
                         FirebaseAuth.getInstance().signOut();
 
+                        //Session manager logout
+                        sessionManager.logout();
+
                         // 🔴 Login screen open + back stack clear
                         Intent intent = new Intent(requireContext(), StartActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -144,8 +156,6 @@ public class HomeFragment1 extends Fragment {
                     })
                     .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                     .show();
-
-        });
     }
 
     //======================

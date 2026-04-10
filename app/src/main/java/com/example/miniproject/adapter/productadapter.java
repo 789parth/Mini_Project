@@ -63,6 +63,7 @@ public class productadapter extends FirebaseRecyclerAdapter<products, productada
             intent.putExtra("product_description", model.getProduct_description());
             intent.putExtra("product_unit", unit);
             intent.putExtra("category_id", model.getCategory_id());
+            intent.putExtra("product_id", model.getProduct_id());
 
             holder.itemView.getContext().startActivity(intent);
         });

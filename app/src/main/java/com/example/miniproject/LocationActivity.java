@@ -16,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.miniproject.ManagerClass.SessionManager;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +26,7 @@ import java.util.Objects;
 
 public class LocationActivity extends AppCompatActivity {
 
+    private SessionManager sessionManager;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     MaterialAutoCompleteTextView location;
@@ -54,6 +56,8 @@ public class LocationActivity extends AppCompatActivity {
             return insets;
         });
 
+        sessionManager = new SessionManager(this);
+
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance().getReference();
 
@@ -81,6 +85,10 @@ public class LocationActivity extends AppCompatActivity {
             String user = Objects.requireNonNull(auth.getCurrentUser()).getUid();
             database.child("users").child(user).child("location").setValue(location.getText().toString());
             Toast.makeText(this, "Location set successfully", Toast.LENGTH_SHORT).show();
+
+            // Save location in session=====================
+            sessionManager.saveUser(sessionManager.getUid() ,sessionManager.getUsername(), location.getText().toString(), sessionManager.getEmail());
+
             Log.d("Location", "Location set successfully");
             Intent intent = new Intent(LocationActivity.this, HomeActivity.class);
             startActivity(intent);

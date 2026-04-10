@@ -2,6 +2,7 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -62,6 +63,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/theme_light_orange"
                 android:orientation="vertical"
                 android:padding="16dp">
 
@@ -69,49 +71,102 @@
                     android:id="@+id/productTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:text="Organic Hybrid Tomatoes"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/productUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:text="500 g"
-                    android:textColor="#777"
-                    android:layout_marginTop="2dp"/>
+                    android:textColor="#777" />
 
 
-
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/elegantNumbers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="5dp">
+
+                    <ImageView
+                        android:id="@+id/addQuantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/plus_icon" />
+
+                    <TextView
+                        android:id="@+id/quantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="3dp"
+                        android:text="1"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/addQuantity"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/removeQuantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="3dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/quantity"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        app:srcCompat="@drawable/minus_icon" />
 
                     <TextView
                         android:id="@+id/productPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="₹54"
+                        android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textSize="18sp"/>
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/totalPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/theme_orange"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <View
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1" />
 
                     <Button
                         android:id="@+id/addBtn"
                         android:layout_width="90dp"
                         android:layout_height="40dp"
                         android:text="ADD"
+                        android:textColor="@color/white"
                         android:textStyle="bold"
-                        android:textColor="@color/theme_orange"
-                        />
+                        android:backgroundTint="@color/theme_orange" />
 
                 </LinearLayout>
 

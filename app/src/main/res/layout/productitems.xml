@@ -19,8 +19,7 @@
         <ImageView android:id="@+id/productImage"
             android:layout_width="match_parent"
             android:layout_height="110dp"
-            android:scaleType="centerCrop"
-            android:background="@drawable/image_product_bg"/>
+            android:scaleType="centerCrop"/>
         <!--  WEIGHT  -->
         <TextView android:id="@+id/productWeight"
             android:layout_width="wrap_content"
