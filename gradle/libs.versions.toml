@@ -1,5 +1,8 @@
 [versions]
 agp = "9.0.0"
+firebaseUiDatabase = "9.1.1"
+glide = "5.0.5"
+imageslideshow = "0.1.2"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
@@ -18,11 +21,17 @@ navigationUiKtx = "2.9.7"
 cardview = "1.0.0"
 firebaseDatabase = "22.0.1"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
+playServicesLocation = "21.3.0"
 playServicesMaps = "20.0.0"
 playServicesAuth = "21.3.0"
 recyclerview = "1.4.0"
+retrofit = "2.11.0"
 
 [libraries]
+firebase-ui-database = { group = "com.firebaseui", name = "firebase-ui-database", version.ref = "firebaseUiDatabase" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+gms-play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+imageslideshow = { group = "com.github.denzcoskun", name = "ImageSlideshow", version.ref = "imageslideshow" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -42,6 +51,8 @@ firebase-database = { group = "com.google.firebase", name = "firebase-database",
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

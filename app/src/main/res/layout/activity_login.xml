@@ -6,13 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/secondary"
-    android:padding="16dp"
     tools:context=".LoginActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:padding="6dp"
+        android:clipToPadding="false">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -85,8 +86,9 @@
                 android:id="@+id/emailInput"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/backgrouninput1"
                 android:drawablePadding="15dp"
                 android:elevation="5dp"
@@ -96,20 +98,21 @@
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
                 android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:textColor="@color/text"
                 android:textColorHint="#757575"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView8"
-                app:layout_constraintTop_toBottomOf="@+id/textView9"
-                tools:ignore="RtlSymmetry" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
             <EditText
                 android:id="@+id/passwordInput"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/backgrouninput1"
                 android:drawablePadding="15dp"
                 android:elevation="5dp"
@@ -119,36 +122,38 @@
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
                 android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:textColor="@color/text"
                 android:textColorHint="#757575"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView8"
-                app:layout_constraintTop_toBottomOf="@+id/emailInput"
-                tools:ignore="RtlSymmetry" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/emailInput" />
 
             <TextView
                 android:id="@+id/forgot_pass"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/madaniarabic_regular"
                 android:text="@string/forgot_password"
                 android:textColor="@color/black"
                 android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="@+id/passwordInput"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/passwordInput" />
 
             <TextView
                 android:id="@+id/noAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="12dp"
                 android:fontFamily="@font/madaniarabic_regular"
                 android:text="@string/don_t_have_account"
                 android:textColor="@color/black"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@+id/passwordInput"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/passwordInput" />
 
             <androidx.appcompat.widget.AppCompatButton

@@ -1,3 +1,13 @@
+import java.io.FileInputStream
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")!!
+
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
@@ -16,6 +26,30 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Helper to get property without quotes and spaces
+        fun getLocalProperty(key: String): String {
+            return localProperties.getProperty(key)?.replace("\"", "")?.trim() ?: ""
+        }
+
+        buildConfigField(
+            "String",
+            "TWILIO_ACCOUNT_SID",
+            "\"${getLocalProperty("TWILIO_ACCOUNT_SID")}\""
+        )
+
+        buildConfigField(
+            "String",
+            "TWILIO_AUTH_TOKEN",
+            "\"${getLocalProperty("TWILIO_AUTH_TOKEN")}\""
+        )
+
+        buildConfigField(
+            "String",
+            "VERIFY_SERVICE_SID",
+            "\"${getLocalProperty("VERIFY_SERVICE_SID")}\""
+        )
+
     }
 
     buildTypes {
@@ -30,6 +64,7 @@ android {
 
     buildFeatures{
         viewBinding = true
+        buildConfig = true
     }
 
     compileOptions {
@@ -54,14 +89,19 @@ dependencies {
     implementation(libs.cardview)
     implementation(libs.firebase.database)
     implementation(libs.recyclerview)
+
+    // Retrofit for API calls
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
+    
+    // External Libraries using the correct Version Catalog references
+    implementation(libs.imageslideshow)
     implementation(libs.play.services.maps)
-    implementation("com.google.android.gms:play-services-location:21.0.1")
-    implementation("com.firebaseui:firebase-ui-database:9.1.1")
-    implementation("com.github.bumptech.glide:glide:5.0.5")
-//    implementation("com.sun.mail:android-mail:1.6.7")
-//    implementation("com.sun.mail:android-activation:1.6.7")
+    implementation(libs.gms.play.services.location)
+    implementation(libs.firebase.ui.database)
+    implementation(libs.glide)
 }

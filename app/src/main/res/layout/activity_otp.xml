@@ -6,120 +6,172 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/secondary"
-    android:elevation="5dp"
-    android:padding="16dp"
     tools:context=".OtpActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:padding="12dp"
+        android:clipToPadding="false">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextNumberPassword"
-        app:layout_constraintStart_toStartOf="@+id/editTextNumberPassword"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/continueBtn"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:width="150dp"
-            android:height="60dp"
-            android:background="@drawable/buttoncolor"
-            android:fontFamily="@font/roboto_medium"
-            android:text="@string/continuebtn"
-            android:textColor="@color/secondary" />
-        
-        <ProgressBar
-            android:id="@+id/progress_circular"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:visibility="gone">
-        </ProgressBar>
-    </FrameLayout>
+            android:paddingBottom="32dp">
 
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:fontFamily="@font/madaniarabic_bold"
-        android:text="@string/otpverify"
-        android:textColor="@color/green"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView6"
-        app:layout_constraintStart_toStartOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/otpverify" />
 
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/madaniarabic_bold"
+                android:text="Verify Your Mobile Number"
+                android:textColor="@color/green"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+
+            <EditText
+                android:id="@+id/etMobileNumber"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/backgrouninput1"
+                android:drawablePadding="18dp"
+                android:elevation="5dp"
+                android:ems="10"
+                android:fontFamily="@font/madaniarabic_regular"
+                android:hint="Enter Mobile Number (+91XXXXXXXXXX)"
+                android:inputType="phone"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:textColor="@color/text"
+                android:textColorHint="#757575"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSendOtp"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginTop="24dp"
+                android:width="150dp"
+                android:background="@drawable/buttoncolor"
+                android:fontFamily="@font/roboto_medium"
+                android:text="Send OTP"
+                android:textColor="@color/secondary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etMobileNumber" />
+
+            <LinearLayout
+                android:id="@+id/llOtpSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/btnSendOtp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/tvOtpMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/madaniarabic_regular"
+                    android:text="OTP sent to mobile"
+                    android:textColor="@color/textinblack"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <EditText
+                    android:id="@+id/etOtp"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/backgrouninput1"
+                    android:drawablePadding="18dp"
+                    android:elevation="5dp"
+                    android:ems="10"
+                    android:fontFamily="@font/madaniarabic_regular"
+                    android:hint="Enter 6-digit OTP"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="18dp"
+                    android:textColor="@color/text"
+                    android:textColorHint="#757575"
+                    android:textSize="16sp"
+                    android:textAlignment="center" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnVerifyOtp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:width="150dp"
+                    android:background="@drawable/buttoncolor"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="Verify OTP"
+                    android:textColor="@color/secondary" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/madaniarabic_regular"
+                        android:text="Didn't receive the OTP?"
+                        android:textColor="@color/textinblack" />
+
+                    <TextView
+                        android:id="@+id/resendOtp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:fontFamily="@font/madaniarabic_regular"
+                        android:text="Resend OTP."
+                        android:textColor="@color/green" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/otpverify" />
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/madaniarabic_regular"
-        android:text="@string/otptext1"
-        android:textColor="@color/textinblack"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView10"
-        app:layout_constraintStart_toStartOf="@+id/textView10"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
-
-    <EditText
-        android:id="@+id/editTextNumberPassword"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/backgrouninput1"
-        android:elevation="5dp"
-        android:ems="10"
-        android:hint="Enter OTP"
-        android:inputType="numberPassword"
-        android:textAlignment="center"
-        android:textColorHint="@color/textinblack"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="@+id/editTextNumberPassword"
-        app:layout_constraintStart_toStartOf="@+id/editTextNumberPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberPassword">
-
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/madaniarabic_regular"
-            android:text="Didn't recive the OTP?"
-            android:textColor="@color/textinblack" />
-
-        <TextView
-            android:id="@+id/resendOtp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:fontFamily="@font/madaniarabic_regular"
-            android:text="Resend OTP."
-            android:textColor="@color/green" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

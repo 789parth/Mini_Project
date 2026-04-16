@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
 
-                            startActivity(new Intent(LoginActivity.this, LocationActivity.class));
+                            startActivity(new Intent(LoginActivity.this, OtpActivity.class));
                             finish();
                         });
                     }
@@ -188,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
                             userRef.child("username").setValue(user.getDisplayName());
 
                             sessionManager.saveUser(user.getUid() ,user.getDisplayName(),"", user.getEmail());
-                            Intent intent = new Intent(LoginActivity.this, LocationActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, OtpActivity.class);
                             startActivity(intent);
                             finish();
                         }

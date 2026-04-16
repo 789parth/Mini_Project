@@ -5,14 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:background="@color/white"
     tools:context=".SignupActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:padding="6dp"
+        android:clipToPadding="false">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -73,8 +74,9 @@
                 android:id="@+id/username"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/backgrouninput1"
                 android:drawableStart="@drawable/user_01"
                 android:drawablePadding="15dp"
@@ -85,19 +87,21 @@
                 android:importantForAutofill="no"
                 android:inputType="textPersonName"
                 android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:textColor="@color/text"
                 android:textColorHint="#757575"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView23"
-                app:layout_constraintTop_toBottomOf="@+id/textView23"
-                tools:ignore="RtlSymmetry" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView23" />
 
             <EditText
                 android:id="@+id/email"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/backgrouninput1"
                 android:drawableStart="@drawable/mail_02"
                 android:drawablePadding="15dp"
@@ -108,19 +112,21 @@
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
                 android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:textColor="@color/text"
                 android:textColorHint="@color/textinblack"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@+id/username"
-                app:layout_constraintStart_toStartOf="@+id/username"
-                app:layout_constraintTop_toBottomOf="@+id/username"
-                tools:ignore="RtlSymmetry" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/username" />
 
             <EditText
                 android:id="@+id/pass"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/backgrouninput1"
                 android:drawableStart="@drawable/unlock"
                 android:drawablePadding="15dp"
@@ -131,19 +137,21 @@
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
                 android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:textColor="@color/text"
                 android:textColorHint="#757575"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@+id/email"
-                app:layout_constraintStart_toStartOf="@+id/email"
-                app:layout_constraintTop_toBottomOf="@+id/email"
-                tools:ignore="RtlSymmetry" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/email" />
 
             <EditText
                 android:id="@+id/cpass"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/backgrouninput1"
                 android:drawableStart="@drawable/lock"
                 android:drawablePadding="15dp"
@@ -154,13 +162,13 @@
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
                 android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:textColor="@color/text"
                 android:textColorHint="#757575"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@+id/email"
-                app:layout_constraintStart_toStartOf="@+id/email"
-                app:layout_constraintTop_toBottomOf="@+id/pass"
-                tools:ignore="RtlSymmetry" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pass" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/createAccount"

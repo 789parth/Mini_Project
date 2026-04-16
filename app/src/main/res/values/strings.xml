@@ -5,6 +5,7 @@
     <string name="otp">Login</string>
     <string name="otpverify">OTP Verification</string>
     <string name="otptext1">OTP send to </string>
+    <string name="otp_sent_to">OTP sent to %s</string>
     <string name="continuebtn">continue</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_your_email_to_proceed">Enter your email to Proceed</string>
