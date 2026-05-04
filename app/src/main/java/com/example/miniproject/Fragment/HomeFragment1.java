@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -23,32 +22,37 @@ import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.miniproject.Category.CategoryAdapter;
 import com.example.miniproject.DetailsBottomSheetFragment;
 import com.example.miniproject.ManagerClass.SessionManager;
 import com.example.miniproject.R;
 import com.example.miniproject.StartActivity;
-import com.example.miniproject.ViewModels.CategoryViewModel;
-import com.example.miniproject.adapter.categoryadapter;
-import com.example.miniproject.adapter.productadapter;
-import com.example.miniproject.domain.categorys;
-import com.example.miniproject.domain.products;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.example.miniproject.TrendingProduct.ProductAdapter;
+import com.example.miniproject.TrendingProduct.ProductViewModel;
+import com.example.miniproject.Category.CategoryViewModel;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
+
+import com.example.miniproject.Category.CategoryModel;
+import com.example.miniproject.TrendingProduct.ProductModel;
+import com.example.miniproject.NestedProduct.NestedCategoryPagingAdapter;
 
 import java.util.ArrayList;
 
 public class HomeFragment1 extends Fragment {
 
+    private LinearLayoutManager layoutManager;
     private SessionManager sessionManager;
     TextView viewAll,textView2;
     ImageSlider imageSlider;
     ImageView logoutBtn;
-    RecyclerView recViewTrending, recViewCategory, recViewList1;
-    productadapter adapter, listAdapter1;
-    categoryadapter adapter1;
+    RecyclerView recViewTrending, recViewCategory;
     ProgressBar trendingProgress,list1Progress,categoryProgress;
-    CategoryViewModel categoryViewModel;
+
+    //nested view
+
+    RecyclerView recViewNestedProducts;
+    private NestedCategoryPagingAdapter nestedCategoryPagingAdapter;
 
 
     @Override
@@ -117,19 +121,15 @@ public class HomeFragment1 extends Fragment {
         recViewTrending = view.findViewById(R.id.recViewTrending);
         trendingItems();
 
-        //Category Recycler view.
         recViewCategory = view.findViewById(R.id.recViewCategory);
         categoryItems();
 
-        //List-1 section.
-        recViewList1 = view.findViewById(R.id.recViewList1);
-        listItems();
+        recViewNestedProducts = view.findViewById(R.id.recViewList1);
+        nestedPagingProducts();
 
 
         logoutBtn = view.findViewById(R.id.logoutBtn);
-        logoutBtn.setOnClickListener(v -> {
-            logout();
-        });
+        logoutBtn.setOnClickListener(v -> logout());
 
 
         return view;
@@ -161,102 +161,82 @@ public class HomeFragment1 extends Fragment {
     //======================
     // Recycler view methods.
     //=======================
-    private void listItems() {
-        list1Progress.setVisibility(View.VISIBLE);
-        recViewList1.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+    private void trendingItems() {
+        ProductAdapter productAdapter = new ProductAdapter();
 
-        FirebaseRecyclerOptions<products> options2 =
-                new FirebaseRecyclerOptions.Builder<products>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("products").orderByChild("category_id")
-                                .equalTo("-On_Yc9z2K1dzU4979c8"), products.class)
-                        .build();
+        layoutManager = new LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+        );
 
-        recViewList1.setHasFixedSize(false);
-        recViewList1.setSaveEnabled(false);
+        recViewTrending.setLayoutManager(layoutManager);
+        recViewTrending.setAdapter(productAdapter);
+        recViewTrending.setHasFixedSize(true);
+        recViewTrending.setItemAnimator(null);
 
-        listAdapter1 = new productadapter(options2, list1Progress);
-        recViewList1.setAdapter(listAdapter1);
+        ProductViewModel productViewModel = new ViewModelProvider(requireActivity())
+                .get(ProductViewModel.class);
 
-    }
+        productViewModel.getTrendingProducts().observe(getViewLifecycleOwner(), products -> {
+            trendingProgress.setVisibility(View.GONE);
+            productAdapter.updateList(products);
 
-    private void categoryItems() {
+        });
 
-        categoryProgress.setVisibility(View.VISIBLE);
+        recViewTrending.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
 
-        recViewCategory.setHasFixedSize(false);
-        recViewCategory.setNestedScrollingEnabled(false);
+                int totalItemCount = layoutManager.getItemCount();
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
-        recViewCategory.setLayoutManager(gridLayoutManager);
-
-        categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
-        adapter1 = new categoryadapter(categoryViewModel.list);
-        recViewCategory.setAdapter(adapter1);
-
-        categoryViewModel.init(() -> {
-            adapter1.notifyDataSetChanged();
-            categoryProgress.setVisibility(View.GONE);
+                if (totalItemCount > 0 && lastVisibleItem >= totalItemCount - 3) {
+                    productViewModel.loadNextPage();
+                }
+            }
         });
 
     }
 
-    private void trendingItems() {
-        trendingProgress.setVisibility(View.VISIBLE);
+    private void categoryItems() {
+        CategoryAdapter categoryAdapter = new CategoryAdapter();
 
-        recViewTrending.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        GridLayoutManager gridLayoutManager =
+                new GridLayoutManager(requireContext(), 4);
 
-        FirebaseRecyclerOptions<products> options =
-                new FirebaseRecyclerOptions.Builder<products>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("products").orderByChild("trending_item")
-                                .equalTo(true), products.class)
-                        .build();
+        recViewCategory.setLayoutManager(gridLayoutManager);
+        recViewCategory.setAdapter(categoryAdapter);
+        recViewCategory.setHasFixedSize(false);
+        recViewCategory.setItemAnimator(null);
 
-        recViewTrending.setHasFixedSize(false);
-        recViewTrending.setSaveEnabled(false);
+        CategoryViewModel categoryViewModel = new ViewModelProvider(requireActivity())
+                .get(CategoryViewModel.class);
 
-        adapter = new productadapter(options, trendingProgress);
-        recViewTrending.setAdapter(adapter);
-
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            categoryProgress.setVisibility(View.GONE);
+            categoryAdapter.updateList(categories);
+        });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (adapter != null) adapter.startListening();
-        if (listAdapter1 != null) listAdapter1.startListening();
+    private void nestedPagingProducts() {
+
+        nestedCategoryPagingAdapter = new NestedCategoryPagingAdapter();
+
+        recViewNestedProducts.setLayoutManager(
+                new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        );
+
+        recViewNestedProducts.setAdapter(nestedCategoryPagingAdapter);
+        recViewNestedProducts.setHasFixedSize(false);
+        recViewNestedProducts.setItemAnimator(null);
+
+        CategoryViewModel categoryViewModel = new ViewModelProvider(requireActivity())
+                .get(CategoryViewModel.class);
+
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            nestedCategoryPagingAdapter.updateList(categories);
+        });
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (adapter != null) {
-            adapter.stopListening();
-            recViewTrending.setAdapter(null);
-        }
-
-        if (listAdapter1 != null) {
-            listAdapter1.stopListening();
-            recViewList1.setAdapter(null);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (recViewTrending != null && adapter != null) {
-            recViewTrending.setAdapter(null);
-            recViewTrending.setAdapter(adapter);
-        }
-
-        if (recViewList1 != null && listAdapter1 != null) {
-            recViewList1.setAdapter(null);
-            recViewList1.setAdapter(listAdapter1);
-        }
-    }
-
-
-
 }
