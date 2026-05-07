@@ -6,6 +6,7 @@ public class CategoryModel {
     private String category_image;
     private String category_title;
     private String store_id;
+    private boolean hasProducts = false;
 
     public CategoryModel() {
         // Required for Firebase
@@ -41,5 +42,13 @@ public class CategoryModel {
 
     public void setStore_id(String store_id) {
         this.store_id = store_id;
+    }
+
+    public boolean isHasProducts() {
+        return hasProducts;
+    }
+
+    public void setHasProducts(boolean hasProducts) {
+        this.hasProducts = hasProducts;
     }
 }

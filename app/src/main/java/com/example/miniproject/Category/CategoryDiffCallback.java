@@ -26,8 +26,13 @@ public class CategoryDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getCategory_id()
-                .equals(newList.get(newItemPosition).getCategory_id());
+        String oldId = oldList.get(oldItemPosition).getCategory_id();
+        String newId = newList.get(newItemPosition).getCategory_id();
+
+        if (oldId == null && newId == null) return true;
+        if (oldId == null || newId == null) return false;
+
+        return oldId.equals(newId);
     }
 
     @Override
@@ -35,8 +40,15 @@ public class CategoryDiffCallback extends DiffUtil.Callback {
         CategoryModel oldItem = oldList.get(oldItemPosition);
         CategoryModel newItem = newList.get(newItemPosition);
 
-        return oldItem.getCategory_title().equals(newItem.getCategory_title())
-                && oldItem.getCategory_image().equals(newItem.getCategory_image())
-                && oldItem.getStore_id().equals(newItem.getStore_id());
+        return safeEquals(oldItem.getCategory_title(), newItem.getCategory_title())
+                && safeEquals(oldItem.getCategory_image(), newItem.getCategory_image())
+                && safeEquals(oldItem.getStore_id(), newItem.getStore_id())
+                && oldItem.isHasProducts() == newItem.isHasProducts();
+    }
+
+    private boolean safeEquals(String a, String b) {
+        if (a == null && b == null) return true;
+        if (a == null || b == null) return false;
+        return a.equals(b);
     }
 }

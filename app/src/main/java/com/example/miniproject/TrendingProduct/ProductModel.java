@@ -10,7 +10,7 @@ public class ProductModel implements Serializable {
     private String product_id;
     private String product_image;
     private String product_name;
-    private int product_price;
+    private double product_price;
     private int product_quantity;
     private String product_unit;
     private boolean trending_item;
@@ -69,11 +69,11 @@ public class ProductModel implements Serializable {
         this.product_name = product_name;
     }
 
-    public int getProduct_price() {
+    public double getProduct_price() {
         return product_price;
     }
 
-    public void setProduct_price(int product_price) {
+    public void setProduct_price(double product_price) {
         this.product_price = product_price;
     }
 

@@ -18,9 +18,22 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
+    public interface OnCategoryClick {
+        void onClick(CategoryModel category);
+    }
+
     private final List<CategoryModel> categoryList = new ArrayList<>();
+    private OnCategoryClick listener;
+
+    public CategoryAdapter() {
+    }
+
+    public CategoryAdapter(OnCategoryClick listener) {
+        this.listener = listener;
+    }
 
     public void updateList(List<CategoryModel> newList) {
+
         CategoryDiffCallback diffCallback =
                 new CategoryDiffCallback(categoryList, newList);
 
@@ -36,6 +49,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.categoryitems, parent, false);
 
@@ -44,6 +58,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
+
         CategoryModel category = categoryList.get(position);
 
         holder.categoryTitle.setText(category.getCategory_title());
@@ -52,6 +67,26 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                 .load(category.getCategory_image())
                 .centerCrop()
                 .into(holder.categoryImage);
+
+        if (category.isHasProducts()) {
+
+            holder.itemView.setAlpha(1f);
+            holder.itemView.setEnabled(true);
+            holder.itemView.setClickable(true);
+
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onClick(category);
+                }
+            });
+
+        } else {
+
+            holder.itemView.setAlpha(0.5f);
+            holder.itemView.setEnabled(false);
+            holder.itemView.setClickable(false);
+            holder.itemView.setOnClickListener(null);
+        }
     }
 
     @Override
@@ -64,7 +99,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         ImageView categoryImage;
         TextView categoryTitle;
 
-        CategoryViewHolder(@NonNull View itemView) {
+        public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
 
             categoryImage = itemView.findViewById(R.id.imageView9);

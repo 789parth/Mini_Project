@@ -85,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/madaniarabic_bold"
-                    android:text="₹0"
+                    android:text="-"
                     android:textColor="@color/theme_black"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/madaniarabic_bold"
-                    android:text="₹40"
+                    android:text="-"
                     android:textColor="@color/theme_black"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -140,7 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/madaniarabic_bold"
-                    android:text="₹0"
+                    android:text="-"
                     android:textColor="@color/theme_orange"
                     android:textSize="22sp" />
             </LinearLayout>

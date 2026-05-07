@@ -4,6 +4,8 @@
         <!-- Customize your light theme here. -->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimations</item>
+
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
     </style>
 
     <style name="Theme.MiniProject" parent="Base.Theme.MiniProject" />
@@ -14,4 +16,30 @@
         <item name="android:activityCloseEnterAnimation">@anim/fade_in</item>
         <item name="android:activityCloseExitAnimation">@anim/fade_out</item>
     </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemActiveIndicatorStyle">@style/App.Custom.Indicator</item>
+    </style>
+
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <!-- 1. Set your custom dimensions here -->
+        <item name="android:width">45dp</item>
+        <item name="android:height">45dp</item>
+
+        <!-- 2. Color and Shape Appearance -->
+        <item name="android:color">@color/theme_orange</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.RoundedRect</item>
+    </style>
+
+    <!-- 3. Change cornerSize to a smaller value (not 50%) -->
+    <style name="ShapeAppearance.RoundedRect" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item> <!-- Adjust this for how round the corners should be -->
+    </style>
+
+    <style name="RoundedImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
 </resources>

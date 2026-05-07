@@ -104,4 +104,7 @@ dependencies {
     implementation(libs.gms.play.services.location)
     implementation(libs.firebase.ui.database)
     implementation(libs.glide)
+
+    //Sticky Scroll
+    implementation("com.github.amarjain07:StickyScrollView:1.0.3")
 }

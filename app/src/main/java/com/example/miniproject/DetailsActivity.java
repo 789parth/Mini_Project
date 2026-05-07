@@ -52,12 +52,12 @@ public class DetailsActivity extends AppCompatActivity {
     TextView quantity;
 
     int totalQuantity = 1;
-    int totalPriceAmt = 0;
+    double totalPriceAmt = 0;
 
     ProductModel product;
 
     String name, image, unit, description, categoryId, productId;
-    int price = 0;
+    double price = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

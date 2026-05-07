@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,9 +24,12 @@ import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.miniproject.Category.CategoryAdapter;
+import com.example.miniproject.CategoryActivity;
 import com.example.miniproject.DetailsBottomSheetFragment;
 import com.example.miniproject.ManagerClass.SessionManager;
+import com.example.miniproject.ProductActivity;
 import com.example.miniproject.R;
+import com.example.miniproject.SearchActivity;
 import com.example.miniproject.StartActivity;
 import com.example.miniproject.TrendingProduct.ProductAdapter;
 import com.example.miniproject.TrendingProduct.ProductViewModel;
@@ -36,6 +40,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.example.miniproject.Category.CategoryModel;
 import com.example.miniproject.TrendingProduct.ProductModel;
 import com.example.miniproject.NestedProduct.NestedCategoryPagingAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -43,7 +49,8 @@ public class HomeFragment1 extends Fragment {
 
     private LinearLayoutManager layoutManager;
     private SessionManager sessionManager;
-    TextView viewAll,textView2;
+    TextView viewAllBtn,textView2;
+    EditText searchEditText;
     ImageSlider imageSlider;
     ImageView logoutBtn;
     RecyclerView recViewTrending, recViewCategory;
@@ -77,21 +84,23 @@ public class HomeFragment1 extends Fragment {
         trendingProgress = view.findViewById(R.id.progressBarTrending);
         categoryProgress = view.findViewById(R.id.progressBarCategory);
 
+        EditText searchEditText = view.findViewById(R.id.searchText);
+
+        searchEditText.setFocusable(false);
+        searchEditText.setClickable(true);
+
+        searchEditText.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SearchActivity.class);
+            startActivity(intent);
+        });
 
 
-        viewAll = view.findViewById(R.id.viewAll);
-        viewAll.setOnClickListener(v -> {
-            DetailsBottomSheetFragment detailsBottomSheetFragment = new DetailsBottomSheetFragment();
-
-            // Passing sample data so it doesn't appear empty
-            Bundle bundle = new Bundle();
-            bundle.putString("name", "Trending Items");
-            bundle.putString("image", "android.resource://com.example.miniproject/" + R.drawable.banner1);
-            bundle.putString("description", "Explore our top trending items of the day. Fresh and high-quality groceries delivered to your doorstep.");
-            bundle.putString("ingredients", "Fresh Fruits, Vegetables, Dairy Products");
-
-            detailsBottomSheetFragment.setArguments(bundle);
-            detailsBottomSheetFragment.show(getParentFragmentManager(), "DetailsBottomSheetFragment");
+        viewAllBtn = view.findViewById(R.id.viewAllBtn);
+        viewAllBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ProductActivity.class);
+            intent.putExtra("type", "trending");
+            intent.putExtra("title", "Trending Products");
+            startActivity(intent);
         });
 
         ArrayList<SlideModel> imageList = new ArrayList<>();
@@ -123,6 +132,13 @@ public class HomeFragment1 extends Fragment {
 
         recViewCategory = view.findViewById(R.id.recViewCategory);
         categoryItems();
+
+        TextView exploreMore = view.findViewById(R.id.textView10);
+
+        exploreMore.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), CategoryActivity.class);
+            startActivity(intent);
+        });
 
         recViewNestedProducts = view.findViewById(R.id.recViewList1);
         nestedPagingProducts();
@@ -201,7 +217,12 @@ public class HomeFragment1 extends Fragment {
     }
 
     private void categoryItems() {
-        CategoryAdapter categoryAdapter = new CategoryAdapter();
+        CategoryAdapter categoryAdapter = new CategoryAdapter(category -> {
+            Intent intent = new Intent(getContext(), ProductActivity.class);
+            intent.putExtra("category_id", category.getCategory_id());
+            intent.putExtra("category_title", category.getCategory_title());
+            startActivity(intent);
+        });
 
         GridLayoutManager gridLayoutManager =
                 new GridLayoutManager(requireContext(), 4);
@@ -215,9 +236,51 @@ public class HomeFragment1 extends Fragment {
                 .get(CategoryViewModel.class);
 
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
-            categoryProgress.setVisibility(View.GONE);
-            categoryAdapter.updateList(categories);
+            filterCategoriesWithProducts(new ArrayList<>(categories), categoryAdapter);
         });
+    }
+
+    private void filterCategoriesWithProducts(
+            ArrayList<CategoryModel> categories,
+            CategoryAdapter categoryAdapter
+    ) {
+        FirebaseDatabase.getInstance()
+                .getReference("products")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+
+                    ArrayList<String> categoryIdsWithProducts = new ArrayList<>();
+
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        ProductModel product = ds.getValue(ProductModel.class);
+
+                        if (product != null && product.getCategory_id() != null) {
+                            categoryIdsWithProducts.add(product.getCategory_id().trim());
+                        }
+                    }
+
+                    ArrayList<CategoryModel> filteredCategories = new ArrayList<>();
+
+                    for (CategoryModel category : categories) {
+                        if (category.getCategory_id() != null &&
+                                categoryIdsWithProducts.contains(category.getCategory_id().trim())) {
+
+                            CategoryModel newCategory = new CategoryModel();
+                            newCategory.setCategory_id(category.getCategory_id());
+                            newCategory.setCategory_title(category.getCategory_title());
+                            newCategory.setCategory_image(category.getCategory_image());
+                            newCategory.setStore_id(category.getStore_id());
+
+                            // IMPORTANT
+                            newCategory.setHasProducts(true);
+
+                            filteredCategories.add(newCategory);
+                        }
+                    }
+
+                    categoryAdapter.updateList(filteredCategories);
+                    categoryProgress.setVisibility(View.GONE);
+                });
     }
 
     private void nestedPagingProducts() {

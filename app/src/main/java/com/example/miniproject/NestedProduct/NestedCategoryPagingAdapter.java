@@ -1,8 +1,10 @@
 package com.example.miniproject.NestedProduct;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,17 +57,19 @@ public class NestedCategoryPagingAdapter
 
     static class NestedViewHolder extends RecyclerView.ViewHolder {
 
-        TextView categoryTitle;
+        TextView categoryTitle,viewAllBtn;
         RecyclerView productRecyclerView;
 
         ProductAdapter productAdapter;
         CategoryProductPager pager;
+
 
         NestedViewHolder(@NonNull View itemView) {
             super(itemView);
 
             categoryTitle = itemView.findViewById(R.id.categoryTitle);
             productRecyclerView = itemView.findViewById(R.id.productRecyclerView);
+            viewAllBtn = itemView.findViewById(R.id.viewAllBtn);
 
             productAdapter = new ProductAdapter();
 
@@ -87,9 +91,25 @@ public class NestedCategoryPagingAdapter
 
             detachPager();
 
-            categoryTitle.setText(category.getCategory_title());
+            String text = category.getCategory_title().toLowerCase();
+            String capitalized = text.substring(0, 1).toUpperCase() + text.substring(1);
+            categoryTitle.setText(capitalized);
 
             productAdapter.updateList(new ArrayList<>());
+
+            viewAllBtn.setOnClickListener(v -> {
+                android.content.Context context = itemView.getContext();
+
+                Intent intent = new android.content.Intent(
+                        context,
+                        com.example.miniproject.ProductActivity.class
+                );
+
+                intent.putExtra("category_id", category.getCategory_id());
+                intent.putExtra("category_title", category.getCategory_title());
+
+                context.startActivity(intent);
+            });
 
             pager = new CategoryProductPager(
                     category.getCategory_id(),

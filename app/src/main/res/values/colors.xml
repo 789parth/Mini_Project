@@ -20,4 +20,6 @@
 
     <color name="category_card_bg">#eef7ff</color>
     <color name="product_card_bg">#F8F1E9</color>
+
+    <color name="btn_color">#0050ff</color>
 </resources>
