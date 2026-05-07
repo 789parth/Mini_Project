@@ -18,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.miniproject.ManagerClass.SessionManager;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -35,6 +36,7 @@ public class OtpActivity extends AppCompatActivity {
     private LinearLayout llOtpSection;
     private ProgressBar progressBar;
     private ApiInterface apiInterface;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class OtpActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_otp);
         
-        View root = findViewById(R.id.otp);
+        android.view.View root = findViewById(R.id.otp);
         if (root != null) {
             ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
                 Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -50,6 +52,8 @@ public class OtpActivity extends AppCompatActivity {
                 return insets;
             });
         }
+
+        sessionManager = new SessionManager(this);
 
         // Initialize UI components
         etMobileNumber = findViewById(R.id.etMobileNumber);
@@ -136,7 +140,9 @@ public class OtpActivity extends AppCompatActivity {
                     String status = (String) response.body().get("status");
                     if ("approved".equalsIgnoreCase(status)) {
                         Toast.makeText(OtpActivity.this, "Verification Successful", Toast.LENGTH_LONG).show();
+                        sessionManager.setOtpVerified(true);
                         Intent intent = new Intent(OtpActivity.this, LocationActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     } else if ("pending".equalsIgnoreCase(status)) {

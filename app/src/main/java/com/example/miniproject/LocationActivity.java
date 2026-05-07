@@ -37,7 +37,6 @@ public class LocationActivity extends AppCompatActivity {
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
-                    // Assumes SelectLocationActivity returns the location in an extra called "selectedLocation"
                     if (data != null && data.hasExtra("selectedLocation")) {
                         String selectedLocation = data.getStringExtra("selectedLocation");
                         location.setText(selectedLocation, false);
@@ -57,12 +56,10 @@ public class LocationActivity extends AppCompatActivity {
         });
 
         sessionManager = new SessionManager(this);
-
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance().getReference();
 
         continueBtn = findViewById(R.id.continueBtn2);
-
         location = findViewById(R.id.locationDropdown);
         dropDownBtn = findViewById(R.id.downbtn);
 
@@ -76,7 +73,6 @@ public class LocationActivity extends AppCompatActivity {
             selectLocationLauncher.launch(intent);
         });
 
-
         continueBtn.setOnClickListener(v -> {
             if (location.getText() == null || location.getText().toString().isEmpty()) {
                 Toast.makeText(this, "Please select a location", Toast.LENGTH_SHORT).show();
@@ -84,13 +80,15 @@ public class LocationActivity extends AppCompatActivity {
             }
             String user = Objects.requireNonNull(auth.getCurrentUser()).getUid();
             database.child("users").child(user).child("location").setValue(location.getText().toString());
-            Toast.makeText(this, "Location set successfully", Toast.LENGTH_SHORT).show();
-
-            // Save location in session=====================
+            
+            // Update session flags
             sessionManager.saveUser(sessionManager.getUid() ,sessionManager.getUsername(), location.getText().toString(), sessionManager.getEmail());
+            sessionManager.setLocationSelected(true);
 
-            Log.d("Location", "Location set successfully");
+            Toast.makeText(this, "Location set successfully", Toast.LENGTH_SHORT).show();
+            
             Intent intent = new Intent(LocationActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         });

@@ -3,6 +3,7 @@ package com.example.miniproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.credentials.ClearCredentialStateRequest;
 import androidx.credentials.Credential;
 import androidx.credentials.CredentialManager;
+import androidx.credentials.CustomCredential;
 import androidx.credentials.GetCredentialRequest;
 import androidx.credentials.GetCredentialResponse;
 import androidx.credentials.exceptions.GetCredentialException;
@@ -51,14 +53,16 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.backlocation), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        android.view.View root = findViewById(R.id.backlocation);
+        if (root != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                return insets;
+            });
+        }
 
         sessionManager = new SessionManager(this);
-
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance().getReference();
         credentialManager = CredentialManager.create(this);
@@ -72,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
 
         googleBtn.setOnClickListener(v -> {
             // Force account picker by clearing state first
-            credentialManager.clearCredentialStateAsync(new ClearCredentialStateRequest(), null, executor, new androidx.credentials.CredentialManagerCallback<Void, androidx.credentials.exceptions.ClearCredentialException>() {
+            credentialManager.clearCredentialStateAsync(new ClearCredentialStateRequest(), null, executor, new androidx.credentials.CredentialManagerCallback<>() {
                 @Override
                 public void onResult(Void result) {
                     signInWithGoogle();
@@ -94,25 +98,18 @@ public class LoginActivity extends AppCompatActivity {
             }
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-
                     FirebaseUser user = auth.getCurrentUser();
-
                     if (user != null) {
-
                         DatabaseReference userRef = database.child("users").child(user.getUid());
-
                         userRef.get().addOnSuccessListener(snapshot -> {
-
-                            // SAVE in session====================================
                             String sessionName = snapshot.child("username").getValue(String.class);
                             String sessionEmail = snapshot.child("email").getValue(String.class);
-
-                            sessionManager.saveUser(user.getUid() ,sessionName, "", sessionEmail);
-                            //=====================================================
-
+                            sessionManager.saveUser(user.getUid(), sessionName, "", sessionEmail);
+                            sessionManager.setLoginDone(true);
                             Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
-
-                            startActivity(new Intent(LoginActivity.this, OtpActivity.class));
+                            Intent intent = new Intent(LoginActivity.this, OtpActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                             finish();
                         });
                     }
@@ -155,16 +152,18 @@ public class LoginActivity extends AppCompatActivity {
                 .addCredentialOption(googleIdOption)
                 .build();
 
-        credentialManager.getCredentialAsync(this, request, null, executor, new androidx.credentials.CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
+        credentialManager.getCredentialAsync(this, request, null, executor, new androidx.credentials.CredentialManagerCallback<>() {
             @Override
             public void onResult(GetCredentialResponse result) {
                 Credential credential = result.getCredential();
-                try {
-                    GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.getData());
-                    firebaseAuthWithGoogle(googleIdTokenCredential.getIdToken());
-                } catch (Exception e) {
-                    Log.e("GoogleSignIn", "Error parsing Google ID token: " + e.getMessage());
-                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Error processing Google account", Toast.LENGTH_SHORT).show());
+                if (credential instanceof CustomCredential && credential.getType().equals(GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL)) {
+                    try {
+                        GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.getData());
+                        firebaseAuthWithGoogle(googleIdTokenCredential.getIdToken());
+                    } catch (Exception e) {
+                        Log.e("GoogleSignIn", "Error parsing Google ID token: " + e.getMessage());
+                        runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Error processing Google account", Toast.LENGTH_SHORT).show());
+                    }
                 }
             }
 
@@ -186,14 +185,15 @@ public class LoginActivity extends AppCompatActivity {
                             DatabaseReference userRef = database.child("users").child(user.getUid());
                             userRef.child("email").setValue(user.getEmail());
                             userRef.child("username").setValue(user.getDisplayName());
-
-                            sessionManager.saveUser(user.getUid() ,user.getDisplayName(),"", user.getEmail());
+                            sessionManager.saveUser(user.getUid(), user.getDisplayName(), "", user.getEmail());
+                            sessionManager.setLoginDone(true);
                             Intent intent = new Intent(LoginActivity.this, OtpActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
                         }
                     } else {
-                        Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
+                        runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show());
                     }
                 });
     }

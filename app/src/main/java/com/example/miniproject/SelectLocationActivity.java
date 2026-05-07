@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.CurrentLocationRequest;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -114,11 +115,11 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
     }
 
     private void searchLocation() {
-        String location = searchEditText.getText().toString();
-        if (!location.isEmpty()) {
+        String locationText = searchEditText.getText().toString();
+        if (!locationText.isEmpty()) {
             Geocoder geocoder = new Geocoder(this);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                geocoder.getFromLocationName(location, 1, addresses -> {
+                geocoder.getFromLocationName(locationText, 1, addresses -> {
                     if (addresses != null && !addresses.isEmpty()) {
                         Address address = addresses.get(0);
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
@@ -132,7 +133,7 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
                 });
             } else {
                 try {
-                    List<Address> addressList = geocoder.getFromLocationName(location, 1);
+                    List<Address> addressList = geocoder.getFromLocationName(locationText, 1);
                     if (addressList != null && !addressList.isEmpty()) {
                         Address address = addressList.get(0);
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
@@ -155,8 +156,8 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
     }
 
     private void checkLocationSettingsAndFetchLocation() {
-        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
-                .setMinUpdateIntervalMillis(5000)
+        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
+                .setMinUpdateIntervalMillis(2000)
                 .build();
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -181,25 +182,33 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
     }
 
     private void fetchCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
             return;
         }
 
-        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+        // 1. Instantly get last known location for perceived speed
+        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+            if (location != null && selectedLatLng == null) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                updateMarker(latLng);
+            }
+        });
+
+        // 2. Request fresh location using the modern CurrentLocationRequest API
+        CurrentLocationRequest request = new CurrentLocationRequest.Builder()
+                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                .setMaxUpdateAgeMillis(10000) // Use location if it's less than 10 seconds old
+                .build();
+
+        fusedLocationClient.getCurrentLocation(request, null)
                 .addOnSuccessListener(this, location -> {
                     if (location != null) {
                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                         updateMarker(latLng);
-                    } else {
-                        fusedLocationClient.getLastLocation().addOnSuccessListener(lastLoc -> {
-                            if (lastLoc != null) {
-                                LatLng latLng = new LatLng(lastLoc.getLatitude(), lastLoc.getLongitude());
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                                updateMarker(latLng);
-                            }
-                        });
                     }
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "Location fetch failed", e));
@@ -220,9 +229,17 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng bvmCollegeLocation = new LatLng(22.5523, 72.9231);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bvmCollegeLocation, 15));
-        updateMarker(bvmCollegeLocation);
+        
+        // Immediate fetch attempt when map is ready
+        fetchCurrentLocation();
+        
+        // Default location if nothing found yet
+        if (selectedLatLng == null) {
+            LatLng bvmCollegeLocation = new LatLng(22.5523, 72.9231);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bvmCollegeLocation, 15));
+            updateMarker(bvmCollegeLocation);
+        }
+
         mMap.setOnMapClickListener(this::updateMarker);
     }
 
