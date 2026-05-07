@@ -19,6 +19,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.miniproject.ManagerClass.SessionManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Map;
 
 import retrofit2.Call;
@@ -37,6 +42,8 @@ public class OtpActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ApiInterface apiInterface;
     private SessionManager sessionManager;
+    private FirebaseAuth auth;
+    private DatabaseReference database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +61,8 @@ public class OtpActivity extends AppCompatActivity {
         }
 
         sessionManager = new SessionManager(this);
+        auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance().getReference();
 
         // Initialize UI components
         etMobileNumber = findViewById(R.id.etMobileNumber);
@@ -70,7 +79,7 @@ public class OtpActivity extends AppCompatActivity {
 
         // Send OTP button click listener
         btnSendOtp.setOnClickListener(v -> {
-            String mobileNumber = etMobileNumber.getText().toString().trim();
+            String mobileNumber = "+91" + etMobileNumber.getText().toString().trim();
             if (isValidMobile(mobileNumber)) {
                 sendOtpRequest(mobileNumber, tvOtpMessage);
             } else {
@@ -81,7 +90,7 @@ public class OtpActivity extends AppCompatActivity {
         // Verify OTP button click listener
         btnVerifyOtp.setOnClickListener(v -> {
             String otpCode = etOtp.getText().toString().trim();
-            String mobileNumber = etMobileNumber.getText().toString().trim();
+            String mobileNumber = "+91" + etMobileNumber.getText().toString().trim();
             if (otpCode.length() == 6) {
                 verifyOtpRequest(mobileNumber, otpCode);
             } else {
@@ -91,7 +100,7 @@ public class OtpActivity extends AppCompatActivity {
 
         // Resend OTP click listener
         resendOtp.setOnClickListener(v -> {
-            String mobileNumber = etMobileNumber.getText().toString().trim();
+            String mobileNumber = "+91" + etMobileNumber.getText().toString().trim();
             if (!mobileNumber.isEmpty()) {
                 sendOtpRequest(mobileNumber, tvOtpMessage);
             }
@@ -139,12 +148,24 @@ public class OtpActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     String status = (String) response.body().get("status");
                     if ("approved".equalsIgnoreCase(status)) {
-                        Toast.makeText(OtpActivity.this, "Verification Successful", Toast.LENGTH_LONG).show();
-                        sessionManager.setOtpVerified(true);
-                        Intent intent = new Intent(OtpActivity.this, LocationActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user != null) {
+                            database.child("users").child(user.getUid()).child("mobile").setValue(mobileNumber)
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(OtpActivity.this, "Verification Successful", Toast.LENGTH_LONG).show();
+                                            sessionManager.setOtpVerified(true);
+                                            Intent intent = new Intent(OtpActivity.this, LocationActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            Toast.makeText(OtpActivity.this, "Error saving mobile number", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(OtpActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+                        }
                     } else if ("pending".equalsIgnoreCase(status)) {
                         Toast.makeText(OtpActivity.this, "OTP is pending verification", Toast.LENGTH_SHORT).show();
                     } else {

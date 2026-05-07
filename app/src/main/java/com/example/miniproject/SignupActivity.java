@@ -45,7 +45,9 @@ public class SignupActivity extends AppCompatActivity {
     private EditText username, email, pass, cpass;
     private CredentialManager credentialManager;
     private final Executor executor = Executors.newSingleThreadExecutor();
-    private static final String WEB_CLIENT_ID = "451391621088-2qnec80ouit2c37s1j544278vot4jt07.apps.googleusercontent.com";
+    
+    // Correct Web Client ID from google-services.json
+    private static final String WEB_CLIENT_ID = "451391621088-emjlo6sha2t65nu2ou8td6p72q5gam2j.apps.googleusercontent.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +177,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onError(@NonNull GetCredentialException e) {
                 Log.e("GoogleSignIn", "Error: " + e.getMessage());
-                runOnUiThread(() -> Toast.makeText(SignupActivity.this, "Google Sign In Failed", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(SignupActivity.this, "Sign In Failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
             }
         });
     }
@@ -193,7 +195,7 @@ public class SignupActivity extends AppCompatActivity {
 
                             sessionManager.saveUser(user.getUid(), user.getDisplayName(), "", user.getEmail());
                             sessionManager.setLoginDone(true);
-                            sessionManager.setOtpVerified(true); // Assuming Google sign-in skips OTP
+                            sessionManager.setOtpVerified(true);
 
                             Intent intent = new Intent(SignupActivity.this, LocationActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -201,7 +203,7 @@ public class SignupActivity extends AppCompatActivity {
                             finish();
                         }
                     } else {
-                        runOnUiThread(() -> Toast.makeText(SignupActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> Toast.makeText(SignupActivity.this, "Authentication Failed: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show());
                     }
                 });
     }

@@ -45,7 +45,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailInput, passwordInput;
     private CredentialManager credentialManager;
     private final Executor executor = Executors.newSingleThreadExecutor();
-    private static final String WEB_CLIENT_ID = "451391621088-2qnec80ouit2c37s1j544278vot4jt07.apps.googleusercontent.com";
+    
+    // Updated to the correct Web Client ID from google-services.json
+    private static final String WEB_CLIENT_ID = "451391621088-emjlo6sha2t65nu2ou8td6p72q5gam2j.apps.googleusercontent.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
         Button googleBtn = findViewById(R.id.googleBtn);
 
         googleBtn.setOnClickListener(v -> {
-            // Force account picker by clearing state first
             credentialManager.clearCredentialStateAsync(new ClearCredentialStateRequest(), null, executor, new androidx.credentials.CredentialManagerCallback<>() {
                 @Override
                 public void onResult(Void result) {
@@ -170,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onError(@NonNull GetCredentialException e) {
                 Log.e("GoogleSignIn", "Error: " + e.getMessage());
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Google Sign In Failed", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Sign In Failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
             }
         });
     }
@@ -193,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
                             finish();
                         }
                     } else {
-                        runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Authentication Failed: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show());
                     }
                 });
     }
