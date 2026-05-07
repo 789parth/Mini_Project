@@ -3,6 +3,7 @@ package com.example.miniproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import androidx.credentials.GetCredentialRequest;
 import androidx.credentials.GetCredentialResponse;
 import androidx.credentials.exceptions.GetCredentialException;
 
+import com.example.miniproject.ManagerClass.SessionManager;
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.firebase.auth.AuthCredential;
@@ -37,6 +39,7 @@ import java.util.concurrent.Executors;
 
 public class SignupActivity extends AppCompatActivity {
 
+    private SessionManager sessionManager;
     private FirebaseAuth auth;
     private DatabaseReference database;
     private EditText username, email, pass, cpass;
@@ -49,12 +52,17 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_signup);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        
+        android.view.View root = findViewById(R.id.main);
+        if (root != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                return insets;
+            });
+        }
 
+        sessionManager = new SessionManager(this);
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance().getReference();
         credentialManager = CredentialManager.create(this);
@@ -159,6 +167,7 @@ public class SignupActivity extends AppCompatActivity {
                         firebaseAuthWithGoogle(googleIdTokenCredential.getIdToken());
                     } catch (Exception e) {
                         Log.e("GoogleSignIn", "Error parsing Google ID token: " + e.getMessage());
+                        runOnUiThread(() -> Toast.makeText(SignupActivity.this, "Error processing Google account", Toast.LENGTH_SHORT).show());
                     }
                 }
             }
@@ -182,7 +191,12 @@ public class SignupActivity extends AppCompatActivity {
                             userRef.child("email").setValue(user.getEmail());
                             userRef.child("username").setValue(user.getDisplayName());
 
+                            sessionManager.saveUser(user.getUid(), user.getDisplayName(), "", user.getEmail());
+                            sessionManager.setLoginDone(true);
+                            sessionManager.setOtpVerified(true); // Assuming Google sign-in skips OTP
+
                             Intent intent = new Intent(SignupActivity.this, LocationActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
                         }
