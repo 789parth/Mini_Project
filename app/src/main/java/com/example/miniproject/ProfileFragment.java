@@ -1,217 +1,378 @@
 package com.example.miniproject;
 
+import android.app.AlertDialog;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.example.miniproject.ManagerClass.SessionManager;
-import com.example.miniproject.R;
-
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.example.miniproject.ManagerClass.SessionManager;
+import com.example.miniproject.adapter.BuyAgainAdapter;
+import com.example.miniproject.adapter.FaqAdapter;
+import com.example.miniproject.domain.FaqModel;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ProfileFragment extends Fragment {
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-    }
+    private ImageView ivProfilePhoto;
+    private ImageButton btnChangePhoto;
+    private MaterialButton btnEditUsername, btnChangeLocation;
+    private TextView tvProfileName, tvProfileEmail;
+    private TextView tvAccountEmail, tvAccountPhone, tvAccountLocation;
+    private TextView tvNoOrders, tvNoFaqs;
+    private AppCompatButton btnLogout;
+    private RecyclerView rvPastOrders, rvFaqs;
+
+    private FirebaseAuth auth;
+    private DatabaseReference database;
+    private SessionManager sessionManager;
+
+    private final ArrayList<String> orderFoodNames     = new ArrayList<>();
+    private final ArrayList<String> orderFoodPrices    = new ArrayList<>();
+    private final ArrayList<String> orderFoodImageUrls = new ArrayList<>();
+    private final ArrayList<String> orderProductIds    = new ArrayList<>();
+    private BuyAgainAdapter orderAdapter;
+
+    private final ArrayList<FaqModel> faqList = new ArrayList<>();
+    private FaqAdapter faqAdapter;
+
+    private final ActivityResultLauncher<String> imagePickerLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+                if (uri != null) savePhotoLocally(uri);
+            });
+
+    private final ActivityResultLauncher<Intent> locationLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    String loc = result.getData().getStringExtra("selectedLocation");
+                    if (loc != null && !loc.isEmpty()) saveLocation(loc);
+                }
+            });
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        SessionManager sessionManager = new SessionManager(requireContext());
+        auth           = FirebaseAuth.getInstance();
+        database       = FirebaseDatabase.getInstance().getReference();
+        sessionManager = new SessionManager(requireContext());
 
-        LinearLayout layoutMyAccount = view.findViewById(R.id.layoutMyAccount);
-        LinearLayout layoutAccountDetails = view.findViewById(R.id.layoutAccountDetails);
-        ImageView ivAccountExpand = view.findViewById(R.id.ivAccountExpand);
-        LinearLayout layoutAccountView = view.findViewById(R.id.layoutAccountView);
-        LinearLayout layoutAccountEdit = view.findViewById(R.id.layoutAccountEdit);
-        ImageView ivEditAccount = view.findViewById(R.id.ivEditAccount);
-        EditText etAccountName = view.findViewById(R.id.etAccountName);
-        EditText etAccountEmail = view.findViewById(R.id.etAccountEmail);
-        EditText etAccountPhone = view.findViewById(R.id.etAccountPhone);
-        Button btnSaveAccount = view.findViewById(R.id.btnSaveAccount);
-        TextView tvAccountName = view.findViewById(R.id.tvAccountName);
-        TextView tvAccountEmail = view.findViewById(R.id.tvAccountEmail);
-        TextView tvAccountPhone = view.findViewById(R.id.tvAccountPhone);
+        ivProfilePhoto    = view.findViewById(R.id.ivProfilePhoto);
+        btnChangePhoto    = view.findViewById(R.id.btnChangePhoto);
+        tvProfileName     = view.findViewById(R.id.tvProfileName);
+        tvProfileEmail    = view.findViewById(R.id.tvProfileEmail);
+        tvAccountEmail    = view.findViewById(R.id.tvAccountEmail);
+        tvAccountPhone    = view.findViewById(R.id.tvAccountPhone);
+        tvAccountLocation = view.findViewById(R.id.tvAccountLocation);
+        tvNoOrders        = view.findViewById(R.id.tvNoOrders);
+        tvNoFaqs          = view.findViewById(R.id.tvNoFaqs);
+        btnEditUsername   = view.findViewById(R.id.btnEditUsername);
+        btnChangeLocation = view.findViewById(R.id.btnChangeLocation);
+        btnLogout         = view.findViewById(R.id.btnLogout);
+        rvPastOrders      = view.findViewById(R.id.rvPastOrders);
+        rvFaqs            = view.findViewById(R.id.rvFaqs);
 
-        // Profile header TextViews
-        TextView tvProfileName = view.findViewById(R.id.tvProfileName);
-        TextView tvProfileEmail = view.findViewById(R.id.tvProfileEmail);
-        TextView tvProfilePhone = view.findViewById(R.id.tvProfilePhone);
+        btnChangePhoto.setOnClickListener(v -> showPhotoOptions());
+        btnEditUsername.setOnClickListener(v -> showEditUsernameDialog());
+        btnChangeLocation.setOnClickListener(v ->
+                locationLauncher.launch(new Intent(getActivity(), SelectLocationActivity.class)));
 
-        LinearLayout layoutHelp = view.findViewById(R.id.layoutHelp);
-        LinearLayout layoutHelpDetails = view.findViewById(R.id.layoutHelpDetails);
-        ImageView ivHelpExpand = view.findViewById(R.id.ivHelpExpand);
-        LinearLayout layoutCustomerSupport = view.findViewById(R.id.layoutCustomerSupport);
-        ImageView ivCustomerSupportExpand = view.findViewById(R.id.ivCustomerSupportExpand);
-        LinearLayout layoutCustomerSupportDetails = view.findViewById(R.id.layoutCustomerSupportDetails);
-        LinearLayout layoutFaqsBtn = view.findViewById(R.id.layoutFaqsBtn);
-        ImageView ivFaqsExpand = view.findViewById(R.id.ivFaqsExpand);
-        LinearLayout layoutFaqs = view.findViewById(R.id.layoutFaqs);
+        orderAdapter = new BuyAgainAdapter(
+                orderFoodNames, orderFoodPrices, orderFoodImageUrls, orderProductIds);
+        orderAdapter.setOnAddToCartListener((position, productId, name, priceStr, imageUrl) ->
+                addToCart(productId, name, priceStr, imageUrl));
+        rvPastOrders.setLayoutManager(new LinearLayoutManager(requireContext()));
+        rvPastOrders.setAdapter(orderAdapter);
 
-        boolean[] isAccountExpanded = {false};
-        boolean[] isHelpExpanded = {false};
-        boolean[] isCustomerSupportExpanded = {false};
-        boolean[] isFaqsExpanded = {false};
+        faqAdapter = new FaqAdapter(faqList);
+        rvFaqs.setLayoutManager(new LinearLayoutManager(requireContext()));
+        rvFaqs.setAdapter(faqAdapter);
 
-        // My Account expand/collapse
-        layoutMyAccount.setOnClickListener(v -> {
-            isAccountExpanded[0] = !isAccountExpanded[0];
-            layoutAccountDetails.setVisibility(isAccountExpanded[0] ? View.VISIBLE : View.GONE);
-            ivAccountExpand.setImageResource(isAccountExpanded[0] ? android.R.drawable.arrow_up_float : android.R.drawable.arrow_down_float);
-        });
+        loadUserData();
+        loadPastOrders();
+        loadFaqs();
 
-        // Switch to edit mode
-        ivEditAccount.setOnClickListener(v -> {
-            layoutAccountView.setVisibility(View.GONE);
-            layoutAccountEdit.setVisibility(View.VISIBLE);
-            etAccountName.setText(tvAccountName.getText());
-            etAccountEmail.setText(tvAccountEmail.getText());
-            etAccountPhone.setText(tvAccountPhone.getText());
-        });
-
-        // Save edited details
-        btnSaveAccount.setOnClickListener(v -> {
-            String newName = etAccountName.getText().toString().trim();
-            String newEmail = etAccountEmail.getText().toString().trim();
-            String newPhone = etAccountPhone.getText().toString().trim();
-
-            // Validate inputs
-            if (newName.isEmpty() || newEmail.isEmpty() || newPhone.isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Get current user ID with null check
-            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-                Toast.makeText(requireContext(), "User not logged in. Please login first.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            
-            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
-
-            // Update user data in Firebase
-            userRef.child("username").setValue(newName);
-            userRef.child("email").setValue(newEmail);
-            userRef.child("phone").setValue(newPhone)
-                    .addOnSuccessListener(aVoid -> {
-                        // Update both header and account details UI
-                        tvProfileName.setText(newName);
-                        tvProfileEmail.setText(newEmail);
-                        tvProfilePhone.setText(newPhone);
-                        tvAccountName.setText(newName);
-                        tvAccountEmail.setText(newEmail);
-                        tvAccountPhone.setText(newPhone);
-                        layoutAccountEdit.setVisibility(View.GONE);
-                        layoutAccountView.setVisibility(View.VISIBLE);
-                        Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(requireContext(), "Failed to update profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        });
-
-        // Help expand/collapse
-        layoutHelp.setOnClickListener(v -> {
-            isHelpExpanded[0] = !isHelpExpanded[0];
-            layoutHelpDetails.setVisibility(isHelpExpanded[0] ? View.VISIBLE : View.GONE);
-            ivHelpExpand.setImageResource(isHelpExpanded[0] ? android.R.drawable.arrow_up_float : android.R.drawable.arrow_down_float);
-        });
-
-        // Customer Support expand/collapse
-        layoutCustomerSupport.setOnClickListener(v -> {
-            isCustomerSupportExpanded[0] = !isCustomerSupportExpanded[0];
-            layoutCustomerSupportDetails.setVisibility(isCustomerSupportExpanded[0] ? View.VISIBLE : View.GONE);
-            ivCustomerSupportExpand.setImageResource(isCustomerSupportExpanded[0] ? android.R.drawable.arrow_up_float : android.R.drawable.arrow_down_float);
-            // Close FAQs when opening Customer Support
-            if (isCustomerSupportExpanded[0]) {
-                isFaqsExpanded[0] = false;
-                layoutFaqs.setVisibility(View.GONE);
-                ivFaqsExpand.setImageResource(android.R.drawable.arrow_down_float);
-            }
-        });
-
-        // FAQs expand/collapse
-        layoutFaqsBtn.setOnClickListener(v -> {
-            isFaqsExpanded[0] = !isFaqsExpanded[0];
-            layoutFaqs.setVisibility(isFaqsExpanded[0] ? View.VISIBLE : View.GONE);
-            ivFaqsExpand.setImageResource(isFaqsExpanded[0] ? android.R.drawable.arrow_up_float : android.R.drawable.arrow_down_float);
-            // Close Customer Support when opening FAQs
-            if (isFaqsExpanded[0]) {
-                isCustomerSupportExpanded[0] = false;
-                layoutCustomerSupportDetails.setVisibility(View.GONE);
-                ivCustomerSupportExpand.setImageResource(android.R.drawable.arrow_down_float);
-            }
+        btnLogout.setOnClickListener(v -> {
+            auth.signOut();
+            sessionManager.logout();
+            startActivity(new Intent(getActivity(), StartActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            requireActivity().finish();
         });
 
         return view;
     }
 
-    // Load user profile data from Firebase
-    private void loadUserProfile(TextView tvProfileName, TextView tvProfileEmail, TextView tvProfilePhone,
-                                 TextView tvAccountName, TextView tvAccountEmail, TextView tvAccountPhone) {
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            return;
+    // ─── Profile Photo ─────────────────────────────────────────────────────────
+
+    private void showPhotoOptions() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Profile Photo")
+                .setItems(new String[]{"Choose from Gallery", "Remove Photo"}, (dialog, which) -> {
+                    if (which == 0) imagePickerLauncher.launch("image/*");
+                    else removeProfilePhoto();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void savePhotoLocally(Uri imageUri) {
+        String uid = auth.getUid();
+        if (uid == null) return;
+        try {
+            File destFile = new File(requireContext().getFilesDir(), "profile_" + uid + ".jpg");
+            try (InputStream in  = requireContext().getContentResolver().openInputStream(imageUri);
+                 OutputStream out = new FileOutputStream(destFile)) {
+                if (in == null) throw new Exception("Cannot open image");
+                byte[] buf = new byte[4096];
+                int len;
+                while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+            }
+            String localPath = destFile.getAbsolutePath();
+            Glide.with(requireContext()).load(destFile).circleCrop()
+                    .placeholder(R.drawable.app_logo).into(ivProfilePhoto);
+            database.child("users").child(uid).child("profileImage").setValue(localPath)
+                    .addOnSuccessListener(u -> Toast.makeText(getContext(), "Photo updated!", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Saved locally", Toast.LENGTH_SHORT).show());
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
 
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+    private void removeProfilePhoto() {
+        String uid = auth.getUid();
+        if (uid == null) return;
+        File f = new File(requireContext().getFilesDir(), "profile_" + uid + ".jpg");
+        if (f.exists()) f.delete();
+        database.child("users").child(uid).child("profileImage").removeValue()
+                .addOnSuccessListener(u -> {
+                    if (!isAdded()) return;
+                    ivProfilePhoto.setImageResource(R.drawable.app_logo);
+                    Toast.makeText(getContext(), "Photo removed", Toast.LENGTH_SHORT).show();
+                });
+    }
 
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void loadProfilePhoto(String savedPath) {
+        if (savedPath == null || savedPath.isEmpty()) return;
+        File local = new File(savedPath);
+        if (local.exists()) {
+            Glide.with(requireContext()).load(local).circleCrop()
+                    .placeholder(R.drawable.app_logo).error(R.drawable.app_logo).into(ivProfilePhoto);
+        }
+    }
+
+    // ─── Edit Username ────────────────────────────────────────────────────────
+
+    private void showEditUsernameDialog() {
+        EditText etName = new EditText(requireContext());
+        etName.setText(tvProfileName.getText());
+        etName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        etName.setSelectAllOnFocus(true);
+        etName.setPadding(40, 20, 40, 20);
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Edit Username")
+                .setView(etName)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    String n = etName.getText().toString().trim();
+                    if (n.isEmpty()) { Toast.makeText(getContext(), "Username cannot be empty", Toast.LENGTH_SHORT).show(); return; }
+                    if (n.length() < 3) { Toast.makeText(getContext(), "At least 3 characters required", Toast.LENGTH_SHORT).show(); return; }
+                    saveUsername(n);
+                })
+                .setNegativeButton("Cancel", null).show();
+    }
+
+    private void saveUsername(String newName) {
+        String uid = auth.getUid();
+        if (uid == null) return;
+        database.child("users").child(uid).child("username").setValue(newName)
+                .addOnSuccessListener(u -> {
+                    if (!isAdded()) return;
+                    tvProfileName.setText(newName);
+                    sessionManager.saveUser(uid, newName, sessionManager.getLocation(), sessionManager.getEmail());
+                    Toast.makeText(getContext(), "Username updated!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> { if (isAdded()) Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show(); });
+    }
+
+    // ─── Save Location ────────────────────────────────────────────────────────
+
+    private void saveLocation(String loc) {
+        String uid = auth.getUid();
+        if (uid == null) return;
+        database.child("users").child(uid).child("location").setValue(loc)
+                .addOnSuccessListener(u -> {
+                    if (!isAdded()) return;
+                    tvAccountLocation.setText(loc);
+                    sessionManager.saveUser(uid, sessionManager.getUsername(), loc, sessionManager.getEmail());
+                    Toast.makeText(getContext(), "Location updated!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> { if (isAdded()) Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show(); });
+    }
+
+    // ─── Load User Data ───────────────────────────────────────────────────────
+
+    private void loadUserData() {
+        String uid = auth.getUid();
+        if (uid == null) { applySessionFallback(); return; }
+        database.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!isAdded()) return;
                 if (snapshot.exists()) {
-                    String name = snapshot.child("username").getValue(String.class);
-                    String email = snapshot.child("email").getValue(String.class);
-                    String phone = snapshot.child("phone").getValue(String.class);
-
-                    // Set default values if null
-                    if (name == null) name = "User";
-                    if (email == null) email = "Not set";
-                    if (phone == null) phone = "Not set";
-
-                    // Update all TextViews
-                    tvProfileName.setText(name);
-                    tvProfileEmail.setText(email);
-                    tvProfilePhone.setText(phone);
-                    tvAccountName.setText(name);
-                    tvAccountEmail.setText(email);
-                    tvAccountPhone.setText(phone);
-                } else {
-                    // User data not found
-                    tvProfileName.setText("User");
-                    tvProfileEmail.setText("Not set");
-                    tvProfilePhone.setText("Not set");
-                    tvAccountName.setText("User");
-                    tvAccountEmail.setText("Not set");
-                    tvAccountPhone.setText("Not set");
-                }
+                    String name      = snapshot.child("username").getValue(String.class);
+                    String email     = snapshot.child("email").getValue(String.class);
+                    String mobile    = snapshot.child("mobile").getValue(String.class);
+                    String location  = snapshot.child("location").getValue(String.class);
+                    String photoPath = snapshot.child("profileImage").getValue(String.class);
+                    tvProfileName.setText(name != null ? name : "User Name");
+                    tvProfileEmail.setText(email != null ? email : "Not set");
+                    tvAccountEmail.setText(email != null ? email : "Not set");
+                    tvAccountPhone.setText(mobile != null ? mobile : "Not set");
+                    tvAccountLocation.setText(location != null ? location : "No delivery location set");
+                    loadProfilePhoto(photoPath);
+                } else { applySessionFallback(); }
             }
-
             @Override
-            public void onCancelled(DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to load profile", Toast.LENGTH_SHORT).show();
-            }
+            public void onCancelled(@NonNull DatabaseError error) { if (isAdded()) applySessionFallback(); }
         });
+    }
+
+    private void applySessionFallback() {
+        tvProfileName.setText(sessionManager.getUsername());
+        tvProfileEmail.setText(sessionManager.getEmail());
+        tvAccountEmail.setText(sessionManager.getEmail());
+        tvAccountPhone.setText("Not set");
+        tvAccountLocation.setText(sessionManager.getLocation());
+    }
+
+    // ─── Past Orders ─────────────────────────────────────────────────────────
+
+    private void loadPastOrders() {
+        String uid = auth.getUid();
+        if (uid == null) { showEmptyOrders(); return; }
+        database.child("orders").child(uid).limitToLast(10)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (!isAdded()) return;
+                        orderFoodNames.clear(); orderFoodPrices.clear(); orderFoodImageUrls.clear(); orderProductIds.clear();
+                        for (DataSnapshot orderSnap : snapshot.getChildren()) {
+                            for (DataSnapshot product : orderSnap.child("products").getChildren()) {
+                                String  name     = product.child("product_name").getValue(String.class);
+                                String  imageUrl = product.child("product_image").getValue(String.class);
+                                String  pid      = product.child("product_id").getValue(String.class);
+                                Integer price    = product.child("product_price").getValue(Integer.class);
+                                Integer qty      = product.child("quantity").getValue(Integer.class);
+                                if (name != null) {
+                                    orderFoodNames.add(name); orderFoodImageUrls.add(imageUrl != null ? imageUrl : ""); orderProductIds.add(pid != null ? pid : "");
+                                    if (price != null && qty != null && qty > 1) orderFoodPrices.add("₹" + price + " × " + qty);
+                                    else if (price != null) orderFoodPrices.add("₹" + price);
+                                    else orderFoodPrices.add("—");
+                                }
+                            }
+                        }
+                        orderAdapter.notifyDataSetChanged();
+                        if (orderFoodNames.isEmpty()) showEmptyOrders();
+                        else { rvPastOrders.setVisibility(View.VISIBLE); tvNoOrders.setVisibility(View.GONE); }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        if (isAdded()) { Toast.makeText(getContext(), "Failed to load orders", Toast.LENGTH_SHORT).show(); showEmptyOrders(); }
+                    }
+                });
+    }
+
+    private void showEmptyOrders() { rvPastOrders.setVisibility(View.GONE); tvNoOrders.setVisibility(View.VISIBLE); }
+
+    // ─── Add to Cart ─────────────────────────────────────────────────────────
+
+    private void addToCart(String productId, String name, String priceStr, String imageUrl) {
+        String uid = auth.getUid();
+        if (uid == null) { Toast.makeText(getContext(), "Please login first", Toast.LENGTH_SHORT).show(); return; }
+        int price = 0;
+        try { String n = priceStr.replaceAll("[^0-9]", "").trim(); if (!n.isEmpty()) price = Integer.parseInt(n.substring(0, Math.min(n.length(), 6))); } catch (Exception ignored) {}
+        String cartKey = (productId != null && !productId.isEmpty()) ? productId : name.replaceAll("[^a-zA-Z0-9]", "_");
+        final DatabaseReference cartRef = database.child("carts").child(uid).child(cartKey);
+        final int fp = price;
+        cartRef.get().addOnSuccessListener(snap -> {
+            if (!isAdded()) return;
+            if (snap.exists()) {
+                Integer q = snap.child("quantity").getValue(Integer.class);
+                cartRef.child("quantity").setValue((q != null ? q : 1) + 1)
+                        .addOnSuccessListener(u -> Toast.makeText(getContext(), name + " qty updated", Toast.LENGTH_SHORT).show());
+            } else {
+                HashMap<String, Object> item = new HashMap<>();
+                item.put("product_name", name); item.put("product_image", imageUrl); item.put("product_price", fp); item.put("quantity", 1);
+                cartRef.setValue(item).addOnSuccessListener(u -> Toast.makeText(getContext(), name + " added to cart!", Toast.LENGTH_SHORT).show());
+            }
+        }).addOnFailureListener(e -> Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    // ─── FAQs ────────────────────────────────────────────────────────────────
+
+    private void loadFaqs() {
+        database.child("faqs").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!isAdded()) return;
+                ArrayList<FaqModel> loaded = new ArrayList<>();
+                for (DataSnapshot s : snapshot.getChildren()) { FaqModel f = s.getValue(FaqModel.class); if (f != null && f.getQuestion() != null) loaded.add(f); }
+                if (loaded.isEmpty()) seedDefaultFaqs();
+                else { faqAdapter.updateList(loaded); rvFaqs.setVisibility(View.VISIBLE); tvNoFaqs.setVisibility(View.GONE); }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { if (isAdded()) showHardcodedFaqs(); }
+        });
+    }
+
+    private void seedDefaultFaqs() {
+        DatabaseReference ref = database.child("faqs");
+        ref.child("faq1").child("question").setValue("How do I track my order?");
+        ref.child("faq1").child("answer").setValue("You can track your order in the 'Past Orders' section of your profile.");
+        ref.child("faq2").child("question").setValue("Can I cancel my order?");
+        ref.child("faq2").child("answer").setValue("Orders can be cancelled before dispatch. Please contact customer support.");
+        ref.child("faq3").child("question").setValue("What payment methods are accepted?");
+        ref.child("faq3").child("answer").setValue("We currently accept Cash on Delivery (COD). Online payments coming soon.")
+                .addOnCompleteListener(task -> { if (isAdded()) loadFaqs(); });
+    }
+
+    private void showHardcodedFaqs() {
+        ArrayList<FaqModel> d = new ArrayList<>();
+        d.add(new FaqModel("How do I track my order?", "Track your order in 'Past Orders'."));
+        d.add(new FaqModel("Can I cancel my order?", "Orders can be cancelled before dispatch."));
+        d.add(new FaqModel("What payment methods are accepted?", "Cash on Delivery (COD) is accepted."));
+        faqAdapter.updateList(d); rvFaqs.setVisibility(View.VISIBLE); tvNoFaqs.setVisibility(View.GONE);
     }
 }

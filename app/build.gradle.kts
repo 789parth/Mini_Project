@@ -88,6 +88,7 @@ dependencies {
     implementation(libs.navigation.ui.ktx)
     implementation(libs.cardview)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.storage)
     implementation(libs.recyclerview)
 
     // Retrofit for API calls
