@@ -22,27 +22,14 @@
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="40dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="32dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/logo"
+                android:src="@drawable/png_logo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/madaniarabic_bold"
-                android:text="@string/title"
-                android:textAlignment="center"
-                android:textColor="#43A047"
-                android:textSize="40sp"
-                app:layout_constraintEnd_toEndOf="@+id/imageView3"
-                app:layout_constraintStart_toStartOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <TextView
                 android:id="@+id/textView7"
@@ -52,20 +39,20 @@
                 android:fontFamily="@font/madaniarabic_medium"
                 android:text="@string/deliver_favorite_snacks"
                 android:textAlignment="center"
-                android:textColor="@color/text"
-                app:layout_constraintEnd_toEndOf="@+id/textView6"
-                app:layout_constraintStart_toStartOf="@+id/textView6"
-                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                android:textColor="@color/theme_black"
+                app:layout_constraintEnd_toEndOf="@+id/imageView3"
+                app:layout_constraintStart_toStartOf="@+id/imageView3"
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:fontFamily="@font/madaniarabic_bold"
                 android:text="@string/login"
-                android:textColor="#43A047"
+                android:textColor="@color/btn_color"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView7" />
@@ -77,7 +64,7 @@
                 android:layout_marginTop="2dp"
                 android:fontFamily="@font/madaniarabic_regular"
                 android:text="@string/enter_your_email_to_proceed"
-                android:textColor="@color/text"
+                android:textColor="@color/theme_medium_gray"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="@+id/textView8"
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />
@@ -91,7 +78,7 @@
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/backgrouninput1"
                 android:drawablePadding="15dp"
-                android:elevation="5dp"
+                android:elevation="2dp"
                 android:ems="10"
                 android:fontFamily="@font/madaniarabic_regular"
                 android:hint="@string/enter_your_email"
@@ -99,8 +86,8 @@
                 android:inputType="textEmailAddress"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
-                android:textColor="@color/text"
-                android:textColorHint="#757575"
+                android:textColor="@color/theme_black"
+                android:textColorHint="@color/theme_dark_gray"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -123,8 +110,8 @@
                 android:inputType="textPassword"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
-                android:textColor="@color/text"
-                android:textColorHint="#757575"
+                android:textColor="@color/theme_black"
+                android:textColorHint="@color/theme_dark_gray"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -165,6 +152,7 @@
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/login"
                 android:textColor="@color/secondary"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/forgot_pass" />
@@ -175,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/or_continue_with"
-                android:textColor="#757575"
+                android:textColor="@color/theme_medium_gray"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -194,6 +182,7 @@
                 android:text="@string/google"
                 android:textAllCaps="false"
                 android:textColor="@color/secondary"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewOr" />
@@ -206,7 +195,7 @@
                 android:fontFamily="@font/madaniarabic_regular"
                 android:text="@string/terms_conditions"
                 android:textAlignment="center"
-                android:textColor="@color/textinblack"
+                android:textColor="@color/theme_dark_gray"
                 android:textSize="10sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

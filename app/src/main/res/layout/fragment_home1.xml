@@ -26,7 +26,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp">
+                android:layout_margin="8dp">
 
                 <TextView
                     android:id="@+id/textView"
@@ -62,27 +62,27 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginBottom="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="44dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:background="@drawable/search_bg"
+                    android:background="@drawable/backgrouninput1"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_marginEnd="8dp"
-                        app:srcCompat="@android:drawable/ic_menu_search" />
+                        app:srcCompat="@android:drawable/ic_menu_search"
+                        app:tint="@color/black"/>
 
                     <EditText
                         android:id="@+id/searchText"
@@ -91,7 +91,10 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:hint="Search products..."
+                        android:textColor="@color/theme_black"
+                        android:textColorHint="@color/theme_medium_gray"
                         android:textSize="14sp"
+                        android:paddingVertical="8dp"
                         tools:ignore="TouchTargetSizeCheck" />
                 </LinearLayout>
 
@@ -137,7 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="VIEW ALL"
-                    android:textColor="@color/red"
+                    android:textColor="@color/btn_color"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -153,7 +156,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recViewTrending"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="300dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -183,7 +186,8 @@
             <!-- CATEGORY RECYCLER -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recViewCategory"

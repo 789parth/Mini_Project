@@ -140,15 +140,32 @@ public class ProfileFragment extends Fragment {
         loadFaqs();
 
         // ── Logout ───────────────────────────────────────────────────────────
-        btnLogout.setOnClickListener(v -> {
-            auth.signOut();
-            sessionManager.logout();
-            startActivity(new Intent(getActivity(), StartActivity.class)
-                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-            requireActivity().finish();
-        });
+        btnLogout.setOnClickListener(v -> {logout();});
 
         return view;
+    }
+
+    private void logout() {
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to logout?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+
+                    // 🔴 Firebase logout
+                    FirebaseAuth.getInstance().signOut();
+
+                    //Session manager logout
+                    sessionManager.logout();
+
+                    // 🔴 Login screen open + back stack clear
+                    Intent intent = new Intent(requireContext(), StartActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+
+                })
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     // ─── Profile Photo ────────────────────────────────────────────────────────

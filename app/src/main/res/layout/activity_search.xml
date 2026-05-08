@@ -23,16 +23,17 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            android:background="@drawable/search_bg"
+            android:background="@drawable/backgrouninput1"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="12dp"
             android:paddingEnd="12dp">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_marginEnd="8dp"
+                app:tint="@color/black"
                 app:srcCompat="@android:drawable/ic_menu_search" />
 
             <EditText
@@ -40,10 +41,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:paddingVertical="8dp"
                 android:background="@null"
                 android:hint="Search products..."
                 android:textSize="16sp"
-                android:textColor="@color/black"
+                android:textColor="@color/theme_black"
+                android:textColorHint="@color/theme_medium_gray"
                 android:singleLine="true"
                 android:imeOptions="actionSearch"
                 android:inputType="text"

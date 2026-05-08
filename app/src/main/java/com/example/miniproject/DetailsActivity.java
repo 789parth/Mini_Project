@@ -25,15 +25,9 @@ import com.example.miniproject.TrendingProduct.ProductAdapter;
 import com.example.miniproject.TrendingProduct.ProductModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,7 +38,7 @@ public class DetailsActivity extends AppCompatActivity {
     ConstraintLayout elegantNumber;
     ImageView productImage;
     Button addBtn;
-    TextView productTitle, productUnit, productPrice, productDescription, totalPrice,similarTitle;
+    TextView productTitle, productUnit, productPrice, productDescription, totalPrice, similarTitle;
     RecyclerView similarRecycler;
     ProductAdapter similarAdapter;
 
@@ -58,6 +52,9 @@ public class DetailsActivity extends AppCompatActivity {
 
     String name, image, unit, description, categoryId, productId;
     double price = 0;
+
+    private DatabaseReference liveStockRef;
+    private ValueEventListener liveStockListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,16 +101,7 @@ public class DetailsActivity extends AppCompatActivity {
         totalPrice = findViewById(R.id.totalPrice);
 
         addBtn = findViewById(R.id.addBtn);
-
         elegantNumber = findViewById(R.id.elegantNumbers);
-        if (product.getProduct_quantity() <= 0) {
-            addBtn.setText("Sold Out");
-            addBtn.setEnabled(false);
-            addBtn.setAlpha(0.5f);
-
-            elegantNumber.setVisibility(GONE);
-            elegantNumber.setEnabled(false);
-        }
 
         Glide.with(this)
                 .load(image)
@@ -128,15 +116,52 @@ public class DetailsActivity extends AppCompatActivity {
         totalPrice.setText("Total: ₹" + totalPriceAmt);
 
         similarViewLoad(categoryId);
+        setupQuantityButtons();
+        setupAddButton();
+        checkLiveProductStock();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // When coming back from CartActivity, show Add to Cart again
+        if (product != null && product.getProduct_quantity() > 0) {
+            addBtn.setText("Add to Cart");
+            addBtn.setEnabled(true);
+            addBtn.setAlpha(1f);
+
+            elegantNumber.setVisibility(View.VISIBLE);
+            elegantNumber.setEnabled(true);
+        }
+    }
+
+    private void setupQuantityButtons() {
 
         addQuantity.setOnClickListener(v -> {
-            if (totalQuantity < 10) {
-                totalQuantity++;
-                quantity.setText(String.valueOf(totalQuantity));
 
-                totalPriceAmt = totalQuantity * price;
-                totalPrice.setText("Total: ₹" + totalPriceAmt);
+            int stock = product.getProduct_quantity();
+
+            if (stock <= 0) {
+                Toast.makeText(this, "Product is sold out", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            if (totalQuantity >= 10) {
+                Toast.makeText(this, "Maximum 10 items allowed", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (totalQuantity >= stock) {
+                Toast.makeText(this, "Only " + stock + " items available", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            totalQuantity++;
+            quantity.setText(String.valueOf(totalQuantity));
+
+            totalPriceAmt = totalQuantity * price;
+            totalPrice.setText("Total: ₹" + totalPriceAmt);
         });
 
         removeQuantity.setOnClickListener(v -> {
@@ -148,33 +173,44 @@ public class DetailsActivity extends AppCompatActivity {
                 totalPrice.setText("Total: ₹" + totalPriceAmt);
             }
         });
+    }
+
+    private void setupAddButton() {
 
         addBtn.setOnClickListener(view -> {
+
             if (addBtn.getText().toString().equals("Go to Cart")) {
-
                 startActivity(new Intent(DetailsActivity.this, CartActivity.class));
-
-            } else {
-
-                addedToCart();
-
-                addBtn.setText("Go to Cart");
-                addBtn.setAlpha(1f);
-                addBtn.setEnabled(true);
-
-                elegantNumber.setVisibility(GONE);
-                elegantNumber.setEnabled(false);
+                return;
             }
-        });
 
-        checkIfAlreadyInCart();
-        checkLiveProductStock();
+            addedToCart();
+
+            addBtn.setText("Go to Cart");
+            addBtn.setAlpha(1f);
+            addBtn.setEnabled(true);
+
+            elegantNumber.setVisibility(GONE);
+            elegantNumber.setEnabled(false);
+        });
     }
 
     private void addedToCart() {
 
         if (product.getProduct_quantity() <= 0) {
             Toast.makeText(this, "Product is sold out", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (totalQuantity > 10) {
+            Toast.makeText(this, "Maximum 10 items allowed", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (totalQuantity > product.getProduct_quantity()) {
+            Toast.makeText(this,
+                    "Only " + product.getProduct_quantity() + " items available",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -203,36 +239,9 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void checkIfAlreadyInCart() {
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user == null) return;
-
-        String uid = user.getUid();
-
-        DatabaseReference cartRef = FirebaseDatabase.getInstance()
-                .getReference("carts")
-                .child(uid)
-                .child(productId);
-
-        cartRef.get().addOnSuccessListener(snapshot -> {
-            if (snapshot.exists()) {
-
-                addBtn.setText("Go to Cart");
-                addBtn.setEnabled(true);
-                addBtn.setAlpha(1f);
-
-                elegantNumber.setVisibility(GONE);
-                elegantNumber.setEnabled(false);
-            }
-        });
-    }
-
     private void similarViewLoad(String categoryId) {
 
         similarRecycler = findViewById(R.id.similarRecycler);
-
         similarAdapter = new ProductAdapter();
 
         similarRecycler.setLayoutManager(
@@ -256,23 +265,22 @@ public class DetailsActivity extends AppCompatActivity {
                         for (DataSnapshot child : snapshot.getChildren()) {
                             ProductModel similarProduct = child.getValue(ProductModel.class);
 
-                            if (similarProduct != null
-                                    && !similarProduct.getProduct_id().equals(productId)) {
-                                similarList.add(similarProduct);
+                            if (similarProduct != null) {
+                                similarProduct.setProduct_id(child.getKey());
+
+                                if (!similarProduct.getProduct_id().equals(productId)) {
+                                    similarList.add(similarProduct);
+                                }
                             }
+                        }
 
-                            if (similarList.isEmpty()) {
-
-                                similarRecycler.setVisibility(View.GONE);
-                                similarTitle.setVisibility(View.GONE);
-
-                            } else {
-
-                                similarRecycler.setVisibility(View.VISIBLE);
-                                similarTitle.setVisibility(View.VISIBLE);
-
-                                similarAdapter.updateList(similarList);
-                            }
+                        if (similarList.isEmpty()) {
+                            similarRecycler.setVisibility(View.GONE);
+                            similarTitle.setVisibility(View.GONE);
+                        } else {
+                            similarRecycler.setVisibility(View.VISIBLE);
+                            similarTitle.setVisibility(View.VISIBLE);
+                            similarAdapter.updateList(similarList);
                         }
                     }
 
@@ -281,13 +289,14 @@ public class DetailsActivity extends AppCompatActivity {
                     }
                 });
     }
+
     private void checkLiveProductStock() {
 
-        DatabaseReference productRef = FirebaseDatabase.getInstance()
+        liveStockRef = FirebaseDatabase.getInstance()
                 .getReference("products")
                 .child(productId);
 
-        productRef.addValueEventListener(new ValueEventListener() {
+        liveStockListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
@@ -295,6 +304,7 @@ public class DetailsActivity extends AppCompatActivity {
 
                 if (latestProduct == null) return;
 
+                latestProduct.setProduct_id(productId);
                 product = latestProduct;
 
                 int latestQuantity = latestProduct.getProduct_quantity();
@@ -318,12 +328,31 @@ public class DetailsActivity extends AppCompatActivity {
                         elegantNumber.setVisibility(View.VISIBLE);
                         elegantNumber.setEnabled(true);
                     }
+
+                    if (totalQuantity > latestQuantity) {
+                        totalQuantity = latestQuantity;
+                        quantity.setText(String.valueOf(totalQuantity));
+
+                        totalPriceAmt = totalQuantity * price;
+                        totalPrice.setText("Total: ₹" + totalPriceAmt);
+                    }
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
             }
-        });
+        };
+
+        liveStockRef.addValueEventListener(liveStockListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (liveStockRef != null && liveStockListener != null) {
+            liveStockRef.removeEventListener(liveStockListener);
+        }
     }
 }

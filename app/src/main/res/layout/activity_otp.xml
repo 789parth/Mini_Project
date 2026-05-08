@@ -28,7 +28,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/otpverify" />
+                app:srcCompat="@drawable/otpimage" />
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -37,7 +37,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/madaniarabic_bold"
                 android:text="Verify Your Mobile Number"
-                android:textColor="@color/green"
+                android:textColor="@color/btn_color"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -59,8 +59,8 @@
                 android:inputType="phone"
                 android:paddingStart="18dp"
                 android:paddingEnd="18dp"
-                android:textColor="@color/text"
-                android:textColorHint="#757575"
+                android:textColor="@color/theme_black"
+                android:textColorHint="@color/theme_medium_gray"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -76,6 +76,7 @@
                 android:fontFamily="@font/roboto_medium"
                 android:text="Send OTP"
                 android:textColor="@color/secondary"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/etMobileNumber" />
@@ -98,7 +99,7 @@
                     android:layout_gravity="center"
                     android:fontFamily="@font/madaniarabic_regular"
                     android:text="OTP sent to mobile"
-                    android:textColor="@color/textinblack"
+                    android:textColor="@color/theme_medium_gray"
                     android:textSize="12sp"
                     android:layout_marginBottom="8dp"/>
 
@@ -119,8 +120,8 @@
                     android:maxLength="6"
                     android:paddingStart="18dp"
                     android:paddingEnd="18dp"
-                    android:textColor="@color/text"
-                    android:textColorHint="#757575"
+                    android:textColor="@color/theme_black"
+                    android:textColorHint="@color/theme_medium_gray"
                     android:textSize="16sp"
                     android:textAlignment="center" />
 
@@ -148,7 +149,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/madaniarabic_regular"
                         android:text="Didn't receive the OTP?"
-                        android:textColor="@color/textinblack" />
+                        android:textColor="@color/theme_black" />
 
                     <TextView
                         android:id="@+id/resendOtp"
@@ -157,7 +158,7 @@
                         android:layout_marginStart="4dp"
                         android:fontFamily="@font/madaniarabic_regular"
                         android:text="Resend OTP."
-                        android:textColor="@color/green" />
+                        android:textColor="@color/btn_color" />
                 </LinearLayout>
             </LinearLayout>
 

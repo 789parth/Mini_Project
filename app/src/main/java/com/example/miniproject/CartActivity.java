@@ -105,9 +105,7 @@ public class CartActivity extends AppCompatActivity {
                         userLocation = snapshot.getValue(String.class);
                     }
                 })
-                .addOnFailureListener(e -> {
-                    userLocation = "Not Available";
-                });
+                .addOnFailureListener(e -> userLocation = "Not Available");
     }
 
     private void updateCartUi(List<CartModel> list) {
@@ -146,8 +144,7 @@ public class CartActivity extends AppCompatActivity {
         String orderId = rootRef.child("orders").child(userId).push().getKey();
 
         if (orderId == null) {
-            checkoutBtn.setEnabled(true);
-            checkoutBtn.setText("Checkout");
+            resetCheckoutButton();
             Toast.makeText(this, "Order ID not created", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -189,24 +186,88 @@ public class CartActivity extends AppCompatActivity {
                 .child(orderId)
                 .setValue(orderMap)
                 .addOnSuccessListener(unused -> {
-                    rootRef.child("carts")
-                            .child(userId)
-                            .removeValue()
-                            .addOnSuccessListener(unused1 -> {
-                                Toast.makeText(this, "Order placed successfully", Toast.LENGTH_SHORT).show();
-                                checkoutBtn.setEnabled(true);
-                                checkoutBtn.setText("Checkout");
-                            })
-                            .addOnFailureListener(e -> {
-                                checkoutBtn.setEnabled(true);
-                                checkoutBtn.setText("Checkout");
-                                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                            });
+
+                    updateProductStock(cartList, () -> {
+
+                        rootRef.child("carts")
+                                .child(userId)
+                                .removeValue()
+                                .addOnSuccessListener(unused1 -> {
+                                    Toast.makeText(this,
+                                            "Order placed successfully",
+                                            Toast.LENGTH_SHORT).show();
+
+                                    resetCheckoutButton();
+                                })
+                                .addOnFailureListener(e -> {
+                                    resetCheckoutButton();
+                                    Toast.makeText(this,
+                                            e.getMessage(),
+                                            Toast.LENGTH_SHORT).show();
+                                });
+                    });
+
                 })
                 .addOnFailureListener(e -> {
-                    checkoutBtn.setEnabled(true);
-                    checkoutBtn.setText("Checkout");
+                    resetCheckoutButton();
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void updateProductStock(List<CartModel> cartList, Runnable onComplete) {
+
+        final int[] completed = {0};
+
+        for (CartModel item : cartList) {
+
+            DatabaseReference productRef = rootRef.child("products")
+                    .child(item.getProductId());
+
+            productRef.child("product_quantity")
+                    .get()
+                    .addOnSuccessListener(snapshot -> {
+
+                        Long stockLong = snapshot.getValue(Long.class);
+
+                        if (stockLong != null) {
+
+                            int currentStock = stockLong.intValue();
+                            int updatedStock = currentStock - item.getQuantity();
+
+                            if (updatedStock < 0) {
+                                updatedStock = 0;
+                            }
+
+                            productRef.child("product_quantity")
+                                    .setValue(updatedStock)
+                                    .addOnCompleteListener(task -> {
+                                        completed[0]++;
+
+                                        if (completed[0] == cartList.size()) {
+                                            onComplete.run();
+                                        }
+                                    });
+
+                        } else {
+                            completed[0]++;
+
+                            if (completed[0] == cartList.size()) {
+                                onComplete.run();
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        completed[0]++;
+
+                        if (completed[0] == cartList.size()) {
+                            onComplete.run();
+                        }
+                    });
+        }
+    }
+
+    private void resetCheckoutButton() {
+        checkoutBtn.setEnabled(true);
+        checkoutBtn.setText("Checkout");
     }
 }
